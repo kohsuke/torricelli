@@ -36,6 +36,7 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -417,22 +418,6 @@ public class CGI {
          *
          * @return
          *      null if script was not found.
-         * <ul>
-         * <li>
-         * <code>path</code> -    full file-system path to valid cgi script,
-         *                        or null if no cgi was found
-         * <li>
-         * <code>scriptName</code> -
-         *                        CGI variable SCRIPT_NAME; the full URL path
-         *                        to valid cgi script or null if no cgi was
-         *                        found
-         * <li>
-         * <code>cgiName</code> - servlet pathInfo fragment corresponding to
-         *                        the cgi script itself, or null if not found
-         * <li>
-         * <code>name</code> -    simple name (no directories) of the
-         *                        cgi script, or null if no cgi was found
-         * </ul>
          *
          * @since Tomcat 4.0
          */
@@ -850,7 +835,7 @@ public class CGI {
         private String command = null;
 
         /** environment used when invoking the cgi script */
-        private Hashtable env = null;
+        private Map<String,String> env = null;
 
         /** working directory used when invoking the cgi script */
         private File wd = null;
@@ -863,9 +848,6 @@ public class CGI {
 
         /** response object used to set headers & get output stream */
         private HttpServletResponse response = null;
-
-        /** boolean tracking whether this object has enough info to run() */
-        private boolean readyToRun = false;
 
 
 
@@ -884,28 +866,13 @@ public class CGI {
          * @param  params   ArrayList with the script's query command line
          *                  paramters as strings
          */
-        protected CGIRunner(String command, Hashtable env, File wd,
+        protected CGIRunner(String command, Map<String,String> env, File wd,
                             ArrayList<String> params) {
             this.command = command;
             this.env = env;
             this.wd = wd;
             this.params = params;
-            updateReadyStatus();
         }
-
-
-
-        /**
-         * Checks & sets ready status
-         */
-        protected void updateReadyStatus() {
-            readyToRun = command != null
-                    && env != null
-                    && wd != null
-                    && params != null
-                    && response != null;
-        }
-
 
 
         /**
@@ -915,7 +882,11 @@ public class CGI {
          *           an exception), true if ready
          */
         protected boolean isReady() {
-            return readyToRun;
+            return command != null
+                    && env != null
+                    && wd != null
+                    && params != null
+                    && response != null;
         }
 
 
@@ -929,7 +900,6 @@ public class CGI {
          */
         protected void setResponse(HttpServletResponse response) {
             this.response = response;
-            updateReadyStatus();
         }
 
 
@@ -942,7 +912,6 @@ public class CGI {
          */
         protected void setInput(InputStream stdin) {
             this.stdin = stdin;
-            updateReadyStatus();
         }
 
 
@@ -959,17 +928,11 @@ public class CGI {
          * @exception  NullPointerException   if a hash key has a null value
          *
          */
-        protected String[] hashToStringArray(Hashtable h)
-            throws NullPointerException {
-            Vector<String> v = new Vector<String>();
-            Enumeration e = h.keys();
-            while (e.hasMoreElements()) {
-                String k = e.nextElement().toString();
-                v.add(k + "=" + h.get(k));
-            }
-            String[] strArr = new String[v.size()];
-            v.copyInto(strArr);
-            return strArr;
+        protected String[] hashToStringArray(Map<String,String> h) {
+            ArrayList<String> v = new ArrayList<String>();
+            for (Entry<String, String> e : h.entrySet())
+                v.add(e.getKey()+'='+e.getValue());
+            return v.toArray(new String[v.size()]);
         }
 
 
@@ -1030,7 +993,7 @@ public class CGI {
              */
 
             if (!isReady()) {
-                throw new IOException(this.getClass().getName()
+                throw new IllegalStateException(this.getClass().getName()
                                       + ": not ready to run.");
             }
 
@@ -1089,7 +1052,7 @@ public class CGI {
                 rt = Runtime.getRuntime();
                 proc = rt.exec(cmdAndArgs.toString(), hashToStringArray(env), wd);
 
-                String sContentLength = (String) env.get("CONTENT_LENGTH");
+                String sContentLength = env.get("CONTENT_LENGTH");
 
                 if(!"".equals(sContentLength)) {
                     commandsStdIn = new BufferedOutputStream(proc.getOutputStream());
@@ -1179,9 +1142,8 @@ public class CGI {
 
                 // Close the output stream used
                 cgiOutput.close();
-            }
-            catch (IOException e){
-                LOGGER.warning("Caught exception " + e);
+            } catch (IOException e){
+                LOGGER.log(Level.WARNING,"Caught exception", e);
                 throw e;
             } finally {
                 if (proc != null){
@@ -1277,7 +1239,7 @@ public class CGI {
      * upto and including the two blank lines terminating the headers. It
      * allows the content to be read using bytes or characters as appropriate.
      */
-    protected class HTTPHeaderInputStream extends InputStream {
+    private final class HTTPHeaderInputStream extends InputStream {
         private static final int STATE_CHARACTER = 0;
         private static final int STATE_FIRST_CR = 1;
         private static final int STATE_FIRST_LF = 2;
