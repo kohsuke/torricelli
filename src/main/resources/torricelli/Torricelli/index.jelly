@@ -1,0 +1,11 @@
+<html>
+  <body>
+    <h1>Torricelli</h1>
+
+    <h2>Create a new repository</h2>
+    <form action="create">
+      Name: <input type="text" name="name" />
+      <input type="submit" />
+    </form>
+  </body>
+</html>
