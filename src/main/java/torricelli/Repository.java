@@ -5,7 +5,6 @@ import org.kohsuke.stapler.StaplerResponse;
 import org.apache.commons.io.IOUtils;
 import torricelli.util.StreamCopyThread;
 
-import javax.servlet.ServletInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -73,11 +72,34 @@ public class Repository {
         return port;
     }
 
+    private static final CGI CGI_CONFIG = new CGI();
+
     /**
      * Delegate the processing to "hg serv".
      */
+    // the code in this method is under ASL
     public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
+//        proxy(req, rsp);
 
+        CGI.CGIEnvironment cgiEnv = CGI_CONFIG.new CGIEnvironment(req, req.getServletContext());
+
+        if (cgiEnv.isValid()) {
+            CGI.CGIRunner cgi = cgiEnv.createRunner();
+            //if POST, we need to cgi.setInput
+            //REMIND: how does this interact with Servlet API 2.3's Filters?!
+            if ("POST".equals(req.getMethod())) {
+                cgi.setInput(req.getInputStream());
+            }
+            cgi.setResponse(rsp);
+            cgi.run();
+        }
+
+        if (!cgiEnv.isValid()) {
+            rsp.setStatus(404);
+        }
+    }
+
+    private void proxy(StaplerRequest req, StaplerResponse rsp) throws IOException {
         StringBuilder buf = new StringBuilder("http://localhost:");
         buf.append(port);
         buf.append(req.getRestOfPath());
