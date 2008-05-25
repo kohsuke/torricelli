@@ -84,40 +84,8 @@ public class HgServeRunner {
         String qs = req.getQueryString();
         if(qs!=null) buf.append('?').append(qs);
 
-        HttpURLConnection con = (HttpURLConnection) new URL(buf.toString()).openConnection();
-        con.setDoOutput(true);
-
-        Enumeration h = req.getHeaderNames();
-        while(h.hasMoreElements()) {
-            String key = (String) h.nextElement();
-            Enumeration v = req.getHeaders(key);
-            while (v.hasMoreElements()) {
-                con.addRequestProperty(key,(String)v.nextElement());
-            }
-        }
-
-        // copy the request body
-        con.setRequestMethod(req.getMethod());
-        // TODO: how to set request headers?
-        copyAndClose(req.getInputStream(), con.getOutputStream());
-
-        // copy the response
-        rsp.setStatus(con.getResponseCode(),con.getResponseMessage());
-        Map<String,List<String>> rspHeaders = con.getHeaderFields();
-        for (Entry<String, List<String>> header : rspHeaders.entrySet()) {
-            if(header.getKey()==null)   continue;   // response line
-            for (String value : header.getValue()) {
-                rsp.addHeader(header.getKey(),value);
-            }
-        }
-
-        copyAndClose(con.getInputStream(), rsp.getOutputStream());
-    }
-
-    private void copyAndClose(InputStream in, OutputStream out) throws IOException {
-        IOUtils.copy(in, out);
-        IOUtils.closeQuietly(in);
-        IOUtils.closeQuietly(out);
+        URL url = new URL(buf.toString());
+        rsp.reverseProxyTo(url,req);
     }
 
     private static final Logger LOGGER = Logger.getLogger(HgServeRunner.class.getName());
