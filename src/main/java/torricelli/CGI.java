@@ -21,24 +21,23 @@ import org.apache.commons.io.IOUtils;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Hashtable;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.util.Map;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  CGI-invoking servlet for web applications, used to execute scripts which
@@ -246,9 +245,6 @@ public class CGI {
     private String parameterEncoding = System.getProperty("file.encoding",
                                                           "UTF-8");
 
-    /** object used to ensure multiple threads don't try to expand same file */
-    private final static Object expandFileLock = new Object();
-
     /** the shell environment variables to be passed to the CGI script */
     static Map<String,String> shellEnv = System.getenv();
 
@@ -281,9 +277,6 @@ public class CGI {
 
         /** real file system directory of the enclosing servlet's web app */
         private String webAppRootDir = null;
-
-        /** tempdir for context - used to expand scripts in unexpanded wars */
-        private File tmpDir = null;
 
         /** derived cgi environment */
         private Hashtable env = null;
@@ -335,7 +328,6 @@ public class CGI {
         protected void setupFromContext(ServletContext context) {
             this.context = context;
             this.webAppRootDir = context.getRealPath("/");
-            this.tmpDir = (File) context.getAttribute(Globals.WORK_DIR_ATTR);
         }
 
 
@@ -523,7 +515,6 @@ public class CGI {
 
             // Add the CGI environment variables
             String sPathInfoOrig;
-            String sPathTranslatedOrig;
             String sPathInfoCGI;
             String sPathTranslatedCGI;
             String sCGIFullPath;
@@ -535,16 +526,6 @@ public class CGI {
 
             sPathInfoOrig = this.pathInfo;
             sPathInfoOrig = sPathInfoOrig == null ? "" : sPathInfoOrig;
-
-            sPathTranslatedOrig = req.getPathTranslated();
-            sPathTranslatedOrig =
-                sPathTranslatedOrig == null ? "" : sPathTranslatedOrig;
-
-            if (webAppRootDir == null ) {
-                // The app has not been deployed in exploded form
-                webAppRootDir = tmpDir.toString();
-                expandCGIScript();
-            }
 
             sCGINames = findCGI(sPathInfoOrig,
                                 webAppRootDir,
@@ -687,83 +668,6 @@ public class CGI {
             return true;
 
         }
-
-        /**
-         * Extracts requested resource from web app archive to context work
-         * directory to enable CGI script to be executed.
-         */
-        protected void expandCGIScript() {
-            StringBuffer srcPath = new StringBuffer();
-            StringBuffer destPath = new StringBuffer();
-            InputStream is = null;
-
-            // paths depend on mapping
-            if (cgiPathPrefix == null ) {
-                srcPath.append(pathInfo);
-                is = context.getResourceAsStream(srcPath.toString());
-                destPath.append(tmpDir);
-                destPath.append(pathInfo);
-            } else {
-                // essentially same search algorithm as findCGI()
-                srcPath.append(cgiPathPrefix);
-                StringTokenizer pathWalker =
-                        new StringTokenizer (pathInfo, "/");
-                // start with first element
-                while (pathWalker.hasMoreElements() && (is == null)) {
-                    srcPath.append("/");
-                    srcPath.append(pathWalker.nextElement());
-                    is = context.getResourceAsStream(srcPath.toString());
-                }
-                destPath.append(tmpDir);
-                destPath.append("/");
-                destPath.append(srcPath);
-            }
-
-            if (is == null) {
-                // didn't find anything, give up now
-                LOGGER.fine("expandCGIScript: source '" + srcPath + "' not found");
-                return;
-            }
-
-            File f = new File(destPath.toString());
-            if (f.exists()) {
-                // Don't need to expand if it already exists
-                return;
-            }
-
-            // create directories
-            String dirPath = destPath.toString().substring(
-                    0, destPath.toString().lastIndexOf("/"));
-            File dir = new File(dirPath);
-            dir.mkdirs();
-
-            try {
-                synchronized (expandFileLock) {
-                    // make sure file doesn't exist
-                    if (f.exists()) {
-                        return;
-                    }
-
-                    // create file
-                    if (!f.createNewFile()) {
-                        return;
-                    }
-                    FileOutputStream fos = new FileOutputStream(f);
-
-                    // copy data
-                    IOUtils.copy(is, fos);
-                    is.close();
-                    fos.close();
-                    LOGGER.fine("expandCGIScript: expanded '" + srcPath + "' to '" + destPath + "'");
-                }
-            } catch (IOException ioe) {
-                // delete in case file is corrupted
-                if (f.exists()) {
-                    f.delete();
-                }
-            }
-        }
-
 
         /**
          * Print important CGI environment information in a easy-to-read HTML
@@ -929,11 +833,9 @@ public class CGI {
                     : couldBeBlank);
         }
 
-
         public CGIRunner createRunner() {
             return new CGIRunner(getCommand(), getEnvironment(), getWorkingDirectory(), getParameters());
         }
-
     } //class CGIEnvironment
 
 
