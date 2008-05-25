@@ -1,6 +1,13 @@
-<html>
+<html xmlns:j="jelly:core">
   <body>
     <h1>Torricelli</h1>
+
+    <h2>Repositories</h2>
+    <ul>
+      <j:forEach var="repo" items="${it.listRepositories()}">
+        <li><a href="${repo.name}/">${repo.name}</a></li>
+      </j:forEach>
+    </ul>
 
     <h2>Create a new repository</h2>
     <form action="create">

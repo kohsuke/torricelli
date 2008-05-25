@@ -13,10 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.FileFilter;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map.Entry;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -52,6 +55,25 @@ public class Torricelli {
     public Repository getDynamic(String name, StaplerRequest req, StaplerResponse rsp) throws IOException {
         return getRepository(name);
     }
+
+    /**
+     * List up all the repositories in the root
+     */
+    public List<Repository> listRepositories() throws IOException {
+        File[] repos = home.listFiles(new FileFilter() {
+            public boolean accept(File f) {
+                return new File(f, ".hg").exists();
+            }
+        });
+        if(repos==null) return Collections.emptyList();
+
+        List<Repository> r = new ArrayList<Repository>();
+        for (File repo : repos) {
+            r.add(getRepository(repo.getName()));
+        }
+
+        return r;
+     }
 
     /**
      * Gets the repository.

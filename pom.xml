@@ -45,10 +45,12 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <configuration>
+           <scanIntervalSeconds>3</scanIntervalSeconds>
+
           <!--
             Reload webapp when you hit ENTER. (See JETTY-282 for more)
           -->
-          <consoleForceReload>true</consoleForceReload>
+          <!-- <consoleForceReload>true</consoleForceReload> not available yet -->
 
           <contextPath>/</contextPath>
 
