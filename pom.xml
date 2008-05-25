@@ -63,6 +63,18 @@
               <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
+          <systemProperties>
+            <systemProperty>
+              <!-- always reload views during debugging -->
+              <name>stapler.jelly.noCache</name>
+              <value>true</value>
+            </systemProperty>
+            <systemProperty>
+              <!-- load view resources from the source directly, again for real time change -->
+              <name>stapler.resourcePath</name>
+              <value>src/main/resources</value>
+            </systemProperty>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>
