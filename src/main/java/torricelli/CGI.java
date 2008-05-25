@@ -416,6 +416,7 @@ public class CGI {
          *
          *
          * @return
+         *      null if script was not found.
          * <ul>
          * <li>
          * <code>path</code> -    full file-system path to valid cgi script,
@@ -435,11 +436,9 @@ public class CGI {
          *
          * @since Tomcat 4.0
          */
-        protected String[] findCGI(String pathInfo, String webAppRootDir,
+        protected CGIScript findCGI(String pathInfo, String webAppRootDir,
                                    String contextPath, String servletPath,
                                    String cgiPathPrefix) {
-            String path;
-            String name;
             String scriptname;
             String cginame = "";
 
@@ -468,26 +467,23 @@ public class CGI {
                 currentLocation = new File(currentLocation, nextElement);
                 cginame = cginame + "/" + nextElement;
             }
-            if (!currentLocation.isFile()) {
-                return new String[] { null, null, null, null };
-            } else {
-                LOGGER.fine("findCGI: FOUND cgi at " + currentLocation);
-                path = currentLocation.getAbsolutePath();
-                name = currentLocation.getName();
+            if (!currentLocation.isFile())
+                return null;
 
-                if (".".equals(contextPath)) {
-                    scriptname = servletPath;
-                } else {
-                    scriptname = contextPath + servletPath;
-                }
-                if (!servletPath.equals(cginame)) {
-                    scriptname = scriptname + cginame;
-                }
+            LOGGER.fine("findCGI: FOUND cgi at " + currentLocation);
+
+            if (".".equals(contextPath)) {
+                scriptname = servletPath;
+            } else {
+                scriptname = contextPath + servletPath;
+            }
+            if (!servletPath.equals(cginame)) {
+                scriptname = scriptname + cginame;
             }
 
-            LOGGER.config("findCGI calc: name=" + name + ", path=" + path
+            LOGGER.config("findCGI calc: path=" + currentLocation
                     + ", scriptname=" + scriptname + ", cginame=" + cginame);
-            return new String[] { path, scriptname, cginame, name };
+            return new CGIScript(currentLocation,scriptname,cginame);
         }
 
         /**
@@ -517,33 +513,18 @@ public class CGI {
             String sPathInfoOrig;
             String sPathInfoCGI;
             String sPathTranslatedCGI;
-            String sCGIFullPath;
-            String sCGIScriptName;
-            String sCGIFullName;
-            String sCGIName;
-            String[] sCGINames;
 
 
             sPathInfoOrig = this.pathInfo;
             sPathInfoOrig = sPathInfoOrig == null ? "" : sPathInfoOrig;
 
-            sCGINames = findCGI(sPathInfoOrig,
+            CGIScript script = findCGI(sPathInfoOrig,
                                 webAppRootDir,
                                 contextPath,
                                 servletPath,
                                 cgiPathPrefix);
+            if(script==null)    return false;
 
-            sCGIFullPath = sCGINames[0];
-            sCGIScriptName = sCGINames[1];
-            sCGIFullName = sCGINames[2];
-            sCGIName = sCGINames[3];
-
-            if (sCGIFullPath == null
-                || sCGIScriptName == null
-                || sCGIFullName == null
-                || sCGIName == null) {
-                return false;
-            }
 
             envp.put("SERVER_SOFTWARE", "TOMCAT");
 
@@ -574,10 +555,10 @@ public class CGI {
              *
              */
             if (pathInfo == null
-                || (pathInfo.substring(sCGIFullName.length()).length() <= 0)) {
+                || (pathInfo.substring(script.cgiName.length()).length() <= 0)) {
                 sPathInfoCGI = "";
             } else {
-                sPathInfoCGI = pathInfo.substring(sCGIFullName.length());
+                sPathInfoCGI = pathInfo.substring(script.cgiName.length());
             }
             envp.put("PATH_INFO", sPathInfoCGI);
 
@@ -613,7 +594,7 @@ public class CGI {
             }
 
 
-            envp.put("SCRIPT_NAME", nullsToBlanks(sCGIScriptName));
+            envp.put("SCRIPT_NAME", nullsToBlanks(script.scriptName));
 
             envp.put("QUERY_STRING", nullsToBlanks(req.getQueryString()));
 
@@ -656,8 +637,7 @@ public class CGI {
                 }
             }
 
-            File fCGIFullPath = new File(sCGIFullPath);
-            command = fCGIFullPath.getCanonicalPath();
+            command = script.script.getCanonicalPath();
 
             envp.put("X_TOMCAT_SCRIPT_PATH", command);  //for kicks
 
@@ -1374,6 +1354,28 @@ public class CGI {
             return i;
         }
     }  // class HTTPHeaderInputStream
+
+    public static final class CGIScript {
+        /**
+         * Location of the CGI script.
+         */
+        public final File script;
+        /**
+         * CGI variable SCRIPT_NAME. This is the full URL path
+         * to the CGI script.
+         */
+        public final String scriptName;
+        /**
+         * Servlet pathInfo fragment corresponding to the CGI script.
+         */
+        public final String cgiName;
+
+        public CGIScript(File script, String scriptName, String cgiName) {
+            this.script = script;
+            this.scriptName = scriptName;
+            this.cgiName = cgiName;
+        }
+    }
 
     private static final Logger LOGGER = Logger.getLogger(CGI.class.getName());
 }
