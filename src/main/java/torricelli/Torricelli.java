@@ -1,28 +1,19 @@
 package torricelli;
 
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletContext;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.FileFilter;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Map.Entry;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The root object of the web application.

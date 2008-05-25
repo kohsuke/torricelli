@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 import java.util.Map.Entry;
 
@@ -48,7 +49,15 @@ public class HgServeRunner {
         ));
 
         port = allocatePort();
-        hgServe = new HgInvoker(root.home,"serve","-a","127.0.0.1","-p",port,"--webdir-conf","hgweb.conf").launch();
+        // we'll handle authentication ourselves, so have "hg serve" accept
+        // any push
+        hgServe = new HgInvoker(root.home,"serve",
+                "-a","127.0.0.1",
+                "-p",port,
+                "--webdir-conf","hgweb.conf",
+                "--config","web.push_ssl=false",
+                "--config","web.allow_push=*"
+                ).launch();
         LOGGER.info("Started 'hg serve' on port "+port);
         hgServeDrainer = new StreamCopyThread("drainer for hg serve",hgServe.getInputStream(),System.out);
         hgServeDrainer.start();
@@ -77,6 +86,15 @@ public class HgServeRunner {
 
         HttpURLConnection con = (HttpURLConnection) new URL(buf.toString()).openConnection();
         con.setDoOutput(true);
+
+        Enumeration h = req.getHeaderNames();
+        while(h.hasMoreElements()) {
+            String key = (String) h.nextElement();
+            Enumeration v = req.getHeaders(key);
+            while (v.hasMoreElements()) {
+                con.addRequestProperty(key,(String)v.nextElement());
+            }
+        }
 
         // copy the request body
         con.setRequestMethod(req.getMethod());
