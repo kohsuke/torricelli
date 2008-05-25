@@ -51,7 +51,6 @@
           <consoleForceReload>true</consoleForceReload>
 
           <contextPath>/</contextPath>
-          <webDefaultXml>src/main/webapp/WEB-INF/web.xml</webDefaultXml>
 
           <!-- use the test classpath for loading resources, since this takes priority -->
           <testClassesDirectory>src/main/resources</testClassesDirectory>
