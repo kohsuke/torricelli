@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +61,9 @@ public class WebAppMain implements ServletContextListener {
         } catch (RuntimeException e) {
             LOGGER.log(Level.SEVERE, "Failed to initialize Torricelli",e);
             throw e;
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to initialize Torricelli",e);
+            throw new Error(e);
         }
     }
 

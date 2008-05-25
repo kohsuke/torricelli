@@ -4,12 +4,22 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletContext;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * The root object of the web application.
@@ -25,10 +35,14 @@ public class Torricelli {
      */
     private final ConcurrentHashMap<String,Repository> repositories = new ConcurrentHashMap<String,Repository>();
 
-    public Torricelli(File home, ServletContext context) {
+    private volatile HgServeRunner runner;
+
+    public Torricelli(File home, ServletContext context) throws IOException {
+        INSTANCE = this;
+
         this.home = home;
         this.context = context;
-        INSTANCE = this;
+        this.runner = new HgServeRunner(this);
     }
 
     public void cleanUp() {
@@ -84,5 +98,10 @@ public class Torricelli {
 
     private void sendError(String msg) throws IOException {
         Stapler.getCurrentResponse().sendError(SC_INTERNAL_SERVER_ERROR, msg);
+    }
+
+    public HgServeRunner getRunner() {
+        // TODO: dispose every 100 requests or so
+        return runner;
     }
 }
