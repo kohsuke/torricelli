@@ -1,35 +1,70 @@
 <j:jelly xmlns:j="jelly:core" xmlns:l="/taglibs/layout">
   <l:layout>
-    <div id="wrap">
-      <div id="top">
-        <h2>
-          <a href="#" title="Back to main page">Torricelli</a>
-        </h2>
-      </div>
+    <div id="top">
+      <h2>
+        <a href="#" title="Back to main page">Torricelli</a>
+      </h2>
+    </div>
 
-      <div id="content">
+    <div id="content">
+      <div id="left">
         <h2>Repositories</h2>
-        <ul>
+        <div class="repositoryList">
           <j:forEach var="repo" items="${it.listRepositories()}">
-            <li><a href="${repo.name}/">${repo.name}</a></li>
+            <div>
+              <a href="${repo.name}/"><img src="img/package.gif" align="middle" /></a>
+              <a href="${repo.name}/">${repo.name}</a>
+            </div>
           </j:forEach>
-        </ul>
-
-        <h2>Create a new repository</h2>
-        <form action="create">
-          Name: <input type="text" name="name" />
-          <input type="submit" />
-        </form>
-
-        <div id="clear"/>
+        </div>
       </div>
-      <div id="footer">
-        <p>Copyright 2006 LoadFoO [V1]. Designed by<a href="http://loadfoo.org/" rel="external">LoadFoO</a>. Valid
-          <a href="http://jigsaw.w3.org/css-validator/check/referer" rel="external">CSS</a>
-          &amp;
-          <a href="http://validator.w3.org/check?uri=referer" rel="external">XHTML</a>
-        </p>
+
+      <div id="right">
+        <div class="box" style="width:auto;">
+          <h2>Create a new repository</h2>
+          <form action="create">
+            <table>
+              <tr>
+                <td>
+                  Name
+                </td><td>
+                  <input type="text" name="name" />
+                </td>
+              </tr>
+            </table>
+            <div align="right">
+              <input type="submit" value="create" />
+            </div>
+          </form>
+
+          <h2 style="margin-top:2em">Clone an existing repository</h2>
+          <form action="clone">
+            <table>
+              <tr>
+                <td>
+                  Clone
+                </td>
+                <td>
+                  <select name="src">
+                    <option>abc</option>
+                  </select>
+                </td>
+              </tr><tr>
+                <td>
+                  To
+                </td><td>
+                  <input type="text" name="name" />
+                </td>
+              </tr>
+            </table>
+            <div align="right">
+              <input type="submit" value="clone" />
+            </div>
+          </form>
+        </div>
       </div>
+
+      <div id="clear"/>
     </div>
   </l:layout>
 </j:jelly> 

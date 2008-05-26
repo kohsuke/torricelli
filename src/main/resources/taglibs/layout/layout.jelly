@@ -7,7 +7,16 @@
       <link rel="stylesheet" type="text/css" href="css/style.css" media="screen"/>
     </head>
     <body>
-      <d:invokeBody/>
+      <div id="wrap">
+        <d:invokeBody/>
+        <div id="footer">
+          <p>
+            Powered by <a href="https://torricelli.dev.java.net/">Torricelli</a>
+            <st:nbsp/><st:nbsp/><st:nbsp/>
+            HTML design by <a href="http://loadfoo.org/" rel="external">LoadFoO</a>
+          </p>
+        </div>
+      </div>
     </body>
   </html>
 </j:jelly>

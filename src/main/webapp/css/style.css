@@ -262,3 +262,18 @@ blockquote{
 	margin: 0px;
 	padding: 0;
 }
+
+
+
+
+/******************************************************/
+
+.repositoryList {
+    font-size: 2em;
+}
+
+.repositoryList IMG {
+    vertical-align: middle;
+    margin-right:0.5em;
+    border:0;
+}
