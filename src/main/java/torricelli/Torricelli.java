@@ -1,14 +1,14 @@
 package torricelli;
 
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Delete;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.apache.tools.ant.taskdefs.Delete;
-import org.apache.tools.ant.Project;
 
 import javax.servlet.ServletContext;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import javax.servlet.ServletException;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -88,7 +88,7 @@ public class Torricelli {
     /**
      * Creates a new repository.
      */
-    public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException {
+    public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
         if (!checkName(name)) return;
 
         // create a new mercurial repository
@@ -113,7 +113,7 @@ public class Torricelli {
     /**
      * Clones a repository to a new one.
      */
-    public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException {
+    public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
         if (!checkName(name)) return;
 
         Repository srcRepo = getRepository(src);
@@ -137,7 +137,7 @@ public class Torricelli {
     /**
      * Deletes a repository.
      */
-    public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException {
+    public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
         Repository srcRepo = getRepository(src);
         if(srcRepo==null) {
             sendError("No such repository: "+src);
@@ -155,7 +155,7 @@ public class Torricelli {
     /**
      * Make sure that the name is usable as the repository name.
      */
-    private boolean checkName(String name) throws IOException {
+    private boolean checkName(String name) throws IOException, ServletException {
         Repository repo = getRepository(name);
         if(repo!=null) {
             sendError("Repository "+ name +" already exists");
@@ -183,8 +183,11 @@ public class Torricelli {
         return true;
     }
 
-    private void sendError(String msg) throws IOException {
-        Stapler.getCurrentResponse().sendError(SC_INTERNAL_SERVER_ERROR, msg);
+    private void sendError(String msg) throws IOException, ServletException {
+        StaplerRequest req = Stapler.getCurrentRequest();
+        StaplerResponse rsp = Stapler.getCurrentResponse();
+        req.setAttribute("text",msg);
+        rsp.forward(this,"error",req);
     }
 
     public HgServeRunner getRunner() {
