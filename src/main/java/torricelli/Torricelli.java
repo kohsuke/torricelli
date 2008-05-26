@@ -4,6 +4,8 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.apache.tools.ant.taskdefs.Delete;
+import org.apache.tools.ant.Project;
 
 import javax.servlet.ServletContext;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -108,6 +110,9 @@ public class Torricelli {
         rsp.sendRedirect(name);
     }
 
+    /**
+     * Clones a repository to a new one.
+     */
     public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException {
         if (!checkName(name)) return;
 
@@ -127,6 +132,24 @@ public class Torricelli {
         }
 
         rsp.sendRedirect(name);
+    }
+
+    /**
+     * Deletes a repository.
+     */
+    public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException {
+        Repository srcRepo = getRepository(src);
+        if(srcRepo==null) {
+            sendError("No such repository: "+src);
+            return;
+        }
+
+        Delete del = new Delete();
+        del.setProject(new Project());
+        del.setDir(srcRepo.home);
+        del.execute();
+
+        rsp.sendRedirect(".");
     }
 
     /**

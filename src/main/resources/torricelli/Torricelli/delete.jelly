@@ -1,0 +1,10 @@
+<j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/taglibs/layout">
+  <l:layout>
+    <h2>Are you sure about deleting ${request.getParameter('src')}?</h2>
+
+    <form action="doDelete" method="post">
+      <input type="hidden" name="src" value="${request.getParameter('src')}" />
+      <input type="submit" value="Yes"/>
+    </form>
+  </l:layout>
+</j:jelly>

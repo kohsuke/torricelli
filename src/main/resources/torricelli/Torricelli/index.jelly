@@ -19,73 +19,63 @@
     </d:tag>
   </d:taglib>
   <l:layout xmlns:local="local">
-    <div id="top">
-      <h2>
-        <a href="#" title="Back to main page">Torricelli</a>
-      </h2>
-    </div>
-
     <j:set var="repositories" value="${it.listRepositories()}" />
 
-    <div id="content">
-      <div id="left">
-        <h2>Mercurial Repositories</h2>
-        <div class="repositoryList">
-          <j:forEach var="repo" items="${repositories}">
-            <div>
-              <a href="${repo.name}/"><img src="img/package.gif" align="middle" /></a>
-              <a href="${repo.name}/">${repo.name}</a>
-            </div>
-          </j:forEach>
-        </div>
+    <div id="left">
+      <h2>Mercurial Repositories</h2>
+      <div class="repositoryList">
+        <j:forEach var="repo" items="${repositories}">
+          <div>
+            <a href="${repo.name}/"><img src="img/package.gif" align="middle" /></a>
+            <a href="${repo.name}/">${repo.name}</a>
+          </div>
+        </j:forEach>
       </div>
+    </div>
 
-      <div id="right">
-        <div class="box" style="width:auto;">
-          <h2>Create a new repository</h2>
-          <local:form name="create">
-            <tr>
-              <td>
-                Name
-              </td><td>
-                <input type="text" name="name" />
-              </td>
-            </tr>
-          </local:form>
+    <div id="right">
+      <div class="box" style="width:auto;">
+        <h2>Create a new repository</h2>
+        <local:form name="create">
+          <tr>
+            <td>
+              Name
+            </td><td>
+              <input type="text" name="name" />
+            </td>
+          </tr>
+        </local:form>
 
-          <h2 style="margin-top:2em">Clone an existing repository</h2>
-          <local:form name="clone">
-            <tr>
-              <td>
-                From
-              </td>
-              <td>
-                <local:repoList />
-              </td>
-            </tr><tr>
-              <td>
-                To
-              </td><td>
-                <input type="text" name="name" />
-              </td>
-            </tr>
-          </local:form>
+        <h2 style="margin-top:2em">Clone an existing repository</h2>
+        <local:form name="clone">
+          <tr>
+            <td>
+              From
+            </td>
+            <td>
+              <local:repoList />
+            </td>
+          </tr><tr>
+            <td>
+              To
+            </td><td>
+              <input type="text" name="name" />
+            </td>
+          </tr>
+        </local:form>
 
-          <h2 style="margin-top:2em">Delete a repository</h2>
-          <local:form name="delete">
-            <tr>
-              <td>
-                Name
-              </td>
-              <td>
-                <local:repoList/>
-              </td>
-            </tr>
-          </local:form>
-        </div>
+        <h2 style="margin-top:2em">Delete a repository</h2>
+        <local:form name="delete">
+          <tr>
+            <td>
+              Name
+            </td>
+            <td>
+              <local:repoList/>
+            </td>
+          </tr>
+        </local:form>
       </div>
-
-      <div id="clear"/>
     </div>
   </l:layout>
 </j:jelly> 
