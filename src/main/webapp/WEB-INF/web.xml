@@ -26,7 +26,7 @@
 
   <!-- if specified, this value is used as the home directory -->
   <env-entry>
-    <env-entry-name>HUDSON_HOME</env-entry-name>
+    <env-entry-name>TORRICELLI_HOME</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
     <env-entry-value></env-entry-value>
   </env-entry>
