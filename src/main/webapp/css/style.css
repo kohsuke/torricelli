@@ -10,7 +10,7 @@ body {
 	background: url(../img/top_bg.gif);
 	background-repeat: repeat-x;
 	font-family: Verdana, Arial, sans-serif;
-        font-size: .6em;
+        font-size: 11px;
 }
 
 p {
@@ -23,7 +23,6 @@ h2 {
 	color: #9f9f9f;
 	margin:0px;
 	padding:0px;
-	font-size: 15px;
 }
 
 ul {
@@ -273,7 +272,7 @@ IMG {
 }
 
 .repositoryList {
-    font-size: 2em;
+    font-size: 1.5em;
 }
 
 .repositoryList IMG {
