@@ -1,0 +1,84 @@
+// the URL configuration goes here, in "url" and "staticurl" parameters
+
+        tmpl = templater.templater(mapfile, templater.common_filters,
+                                   defaults={"header": header,
+                                             "footer": footer,
+                                             "motd": motd,
+                                             "url": url,
+                                             "staticurl": staticurl})
+
+
+// serve command defined in commands.py:2484
+"hg serve" essentially delegates to hgweb.cgi equivalent
+
+See hgweb_mod.py:821.  staticurl is configurable!
+
+
+// self.t is the template engine.
+        self.t = templater.templater(mapfile, templater.common_filters,
+                                     defaults={"url": req.url,
+                                               "staticurl": staticurl,
+                                               "urlbase": urlbase,
+                                               "repo": self.reponame,
+                                               "header": header,
+                                               "footer": footer,
+                                               "motd": motd,
+                                               "rawfileheader": rawfileheader,
+                                               "sessionvars": sessionvars
+                                               })
+// typical caller looks like this:
+        yield self.t('changeset',
+                     diff=diff,
+                     rev=ctx.rev(),
+                     node=hex(n),
+                     parent=self.siblings(parents),
+                     child=self.siblings(ctx.children()),
+                     changesettag=self.showtag("changesettag",n),
+                     author=ctx.user(),
+                     desc=ctx.description(),
+                     date=ctx.date(),
+                     files=files,
+                     archives=self.archivelist(hex(n)),
+                     tags=self.nodetagsdict(n),
+                     branches=self.nodebranchdict(ctx))
+
+// template substitution format
+#foo# expands variable 'foo'
+#author|person# evaluates like person(author). See templater.py for the available functions
+
+
+// extensions available in Ubuntu out of the box
+/usr/share/python-support/mercurial/hgext/__init__.py
+/usr/share/python-support/mercurial/hgext/acl.py
+/usr/share/python-support/mercurial/hgext/alias.py
+/usr/share/python-support/mercurial/hgext/bugzilla.py
+/usr/share/python-support/mercurial/hgext/children.py
+/usr/share/python-support/mercurial/hgext/churn.py
+/usr/share/python-support/mercurial/hgext/convert/__init__.py
+/usr/share/python-support/mercurial/hgext/convert/common.py
+/usr/share/python-support/mercurial/hgext/convert/cvs.py
+/usr/share/python-support/mercurial/hgext/convert/darcs.py
+/usr/share/python-support/mercurial/hgext/convert/filemap.py
+/usr/share/python-support/mercurial/hgext/convert/git.py
+/usr/share/python-support/mercurial/hgext/convert/hg.py
+/usr/share/python-support/mercurial/hgext/convert/subversion.py
+/usr/share/python-support/mercurial/hgext/convert/transport.py
+/usr/share/python-support/mercurial/hgext/extdiff.py
+/usr/share/python-support/mercurial/hgext/fetch.py
+/usr/share/python-support/mercurial/hgext/gpg.py
+/usr/share/python-support/mercurial/hgext/graphlog.py
+/usr/share/python-support/mercurial/hgext/hbisect.py
+/usr/share/python-support/mercurial/hgext/hgk.py
+/usr/share/python-support/mercurial/hgext/imerge.py
+/usr/share/python-support/mercurial/hgext/interhg.py
+/usr/share/python-support/mercurial/hgext/mq.py
+/usr/share/python-support/mercurial/hgext/notify.py
+/usr/share/python-support/mercurial/hgext/parentrevspec.py
+/usr/share/python-support/mercurial/hgext/patchbomb.py
+/usr/share/python-support/mercurial/hgext/purge.py
+/usr/share/python-support/mercurial/hgext/record.py
+/usr/share/python-support/mercurial/hgext/transplant.py
+/usr/share/python-support/mercurial/hgext/win32text.py
+
+
+web template taken from http://www.oswd.org/design/preview/id/3551
