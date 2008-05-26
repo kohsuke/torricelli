@@ -1,24 +1,16 @@
 package torricelli;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import torricelli.util.StreamCopyThread;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.File;
-import java.net.HttpURLConnection;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.logging.Logger;
-import java.util.Map.Entry;
 
 /**
  * Baby-sits "hg serve" process.
@@ -56,7 +48,8 @@ public class HgServeRunner {
                 "-p",port,
                 "--webdir-conf","hgweb.conf",
                 "--config","web.push_ssl=false",
-                "--config","web.allow_push=*"
+                "--config","web.allow_push=*",
+                "--templates", root.context.getRealPath("/WEB-INF/templates")
                 ).launch();
         LOGGER.info("Started 'hg serve' on port "+port);
         hgServeDrainer = new StreamCopyThread("drainer for hg serve",hgServe.getInputStream(),System.out);
