@@ -6,11 +6,13 @@
       </h2>
     </div>
 
+    <j:set var="repositories" value="${it.listRepositories()}" />
+
     <div id="content">
       <div id="left">
         <h2>Repositories</h2>
         <div class="repositoryList">
-          <j:forEach var="repo" items="${it.listRepositories()}">
+          <j:forEach var="repo" items="${repositories}">
             <div>
               <a href="${repo.name}/"><img src="img/package.gif" align="middle" /></a>
               <a href="${repo.name}/">${repo.name}</a>
@@ -22,7 +24,7 @@
       <div id="right">
         <div class="box" style="width:auto;">
           <h2>Create a new repository</h2>
-          <form action="create">
+          <form action="create" method="post">
             <table>
               <tr>
                 <td>
@@ -38,15 +40,17 @@
           </form>
 
           <h2 style="margin-top:2em">Clone an existing repository</h2>
-          <form action="clone">
+          <form action="clone" method="post">
             <table>
               <tr>
                 <td>
                   Clone
                 </td>
                 <td>
-                  <select name="src">
-                    <option>abc</option>
+                  <select name="src" style="width:100%">
+                    <j:forEach var="repo" items="${repositories}">
+                      <option>${repo.name}</option>
+                    </j:forEach>
                   </select>
                 </td>
               </tr><tr>

@@ -83,12 +83,11 @@ public class Torricelli {
         return r;
     }
 
+    /**
+     * Creates a new repository.
+     */
     public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException {
-        Repository repo = getRepository(name);
-        if(repo!=null) {
-            sendError("Repository "+ name +" already exists");
-            return;
-        }
+        if (!checkName(name)) return;
 
         // create a new mercurial repository
         File repoHome = new File(home,name);
@@ -107,6 +106,58 @@ public class Torricelli {
         }
 
         rsp.sendRedirect(name);
+    }
+
+    public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException {
+        if (!checkName(name)) return;
+
+        Repository srcRepo = getRepository(src);
+        if(srcRepo==null) {
+            sendError("No such repository: "+src);
+            return;
+        }
+
+        // create a new mercurial repository
+        // TODO: monitor output
+        HgInvoker hgi = new HgInvoker(home,"clone","--quiet",src,name);
+        int r = hgi.launch().waitFor();
+        if(r!=0) {
+            sendError("hg clone failed: "+r);
+            return;
+        }
+
+        rsp.sendRedirect(name);
+    }
+
+    /**
+     * Make sure that the name is usable as the repository name.
+     */
+    private boolean checkName(String name) throws IOException {
+        Repository repo = getRepository(name);
+        if(repo!=null) {
+            sendError("Repository "+ name +" already exists");
+            return false;
+        }
+
+        if(name==null || name.length()==0) {
+            sendError("No name given");
+            return false;
+        }
+
+        for( int i=0; i<name.length(); i++ ) {
+            char ch = name.charAt(i);
+            if(Character.isISOControl(ch)) {
+                sendError("Control character is not allowed");
+                return false;
+            }
+            if("?*/\\%!@#$^&|<>[]:;".indexOf(ch)!=-1) {
+                sendError("Unsafe character '"+ch+"' is not allowed");
+                return false;
+            }
+        }
+
+        // looks good
+        return true;
     }
 
     private void sendError(String msg) throws IOException {
