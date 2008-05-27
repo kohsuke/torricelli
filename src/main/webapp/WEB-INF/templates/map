@@ -11,9 +11,6 @@ filenodelink = '<a href="#url#file/#node|short#/#file|urlescape#{sessionvars%url
 fileellipses = '...'
 searchentry = changelogentry.tmpl
 changeset = changeset.tmpl
-manifest = manifest.tmpl
-manifestdirentry = '<tr class="parity#parity#"><td><tt>drwxr-xr-x</tt>&nbsp;<td>&nbsp;<td>&nbsp;<td><a href="#url#file/#node|short##path|urlescape#{sessionvars%urlparameter}">#basename|escape#/</a>'
-manifestfileentry = '<tr class="parity#parity#"><td><tt>#permissions|permissions#</tt>&nbsp;<td align=right><tt class="date">#date|isodate#</tt>&nbsp;<td align=right><tt>#size#</tt>&nbsp;<td><a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#basename|escape#</a>'
 filerevision = filerevision.tmpl
 fileannotate = fileannotate.tmpl
 filediff = filediff.tmpl
@@ -36,6 +33,10 @@ filedifflink = '<file>#file|escape#</file>'
 
 tags = tags.tmpl
 tagentry = '<tag node="#node#" date="#date" name="#tag|escape#"/>'
+
+manifest = manifest.tmpl
+manifestdirentry = '<dir name="#basename|escape#" />'
+manifestfileentry = '<file permissions="#permissions|permissions#" date="#date|date#" size="#size#" name="#basename|escape#"/>'
 
 changesetparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filerevparent = '<tr><td class="metatag">parent:</td><td><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{rename%filerename}{node|short}</a></td></tr>'

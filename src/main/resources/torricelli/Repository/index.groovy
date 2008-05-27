@@ -34,7 +34,9 @@ l.layout(title:that.name) {
 
 
         H2("Files")
-        
+        UL {
+            that.parse("/file/").file.each { LI(it.@name) }
+        }
     }
 
     l.right {
