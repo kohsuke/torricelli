@@ -44,5 +44,28 @@ l.layout(title:that.name) {
             [HREF:"configure",  TITLE:"Configure"],
             [HREF:"tags",       TITLE:"Tags"]
         ])
+
+        DIV(CLASS:"box") {
+            H2("Directories")
+            
+            def recur // declaration needs to be separate to handle recursion
+            recur = { d ->
+                UL {
+                    d.children.values().each { sub ->
+                        LI {
+                            while(true) {
+                                A(HREF:sub.path,sub.name)
+                                next = sub.collapse();
+                                if(next==null)    break;
+                                text('/')
+                                sub=next
+                            }
+                        }
+                        recur(sub);
+                    }
+                }
+            }
+            recur(that.getRev("tip").dirTree())
+        }
     }
 }

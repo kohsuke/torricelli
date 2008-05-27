@@ -81,7 +81,7 @@ See hgweb_mod.py:821.  staticurl is configurable!
 /usr/share/python-support/mercurial/hgext/win32text.py
 
 
-web template taken from http://www.oswd.org/design/preview/id/3551
+web template taken from http://www.oswd.org/files/designs/3551/LoadFoO/
 
 
 // automatic merge

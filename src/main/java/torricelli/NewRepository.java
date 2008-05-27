@@ -24,4 +24,8 @@ public class NewRepository extends Repository {
             req.getView(this,"_index").forward(req,rsp);
         }
     }
+
+    public ChangeSet getRev(String id) {
+        return new ChangeSet(this,id);
+    }
 }
