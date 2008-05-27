@@ -82,3 +82,9 @@ See hgweb_mod.py:821.  staticurl is configurable!
 
 
 web template taken from http://www.oswd.org/design/preview/id/3551
+
+
+// automatic merge
+hg pull
+HGMERGE=/bin/false hg merge
+hg commit
