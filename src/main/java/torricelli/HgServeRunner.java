@@ -49,14 +49,16 @@ public class HgServeRunner {
         port = allocatePort();
         // we'll handle authentication ourselves, so have "hg serve" accept
         // any push
-        hgServe = new HgInvoker(root.home,"serve",
-                "-a","127.0.0.1",
-                "-p",port,
-                "--webdir-conf","hgweb.conf",
-                "--config","web.push_ssl=false",
-                "--config","web.allow_push=*",
-                "--templates", root.context.getRealPath("/WEB-INF/templates")
-                ).launch();
+        HgInvoker inv = new HgInvoker(root.home, "serve",
+                "-a", "127.0.0.1",
+                "-p", port,
+                "--webdir-conf", "hgweb.conf",
+                "--config", "web.push_ssl=false",
+                "--config", "web.allow_push=*"
+        );
+        if(Torricelli.NEW)
+            inv.arg("--templates", root.context.getRealPath("/WEB-INF/templates"));
+        hgServe = inv.launch();
         LOGGER.info("Started 'hg serve' on port "+port);
         hgServeDrainer = new StreamCopyThread("drainer for hg serve",hgServe.getInputStream(),System.out);
         hgServeDrainer.start();

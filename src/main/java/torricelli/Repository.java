@@ -36,7 +36,7 @@ public class Repository {
      *
      * This is mostly for helping development by looking at the backend raw output.
      */
-    public void doRaw(StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
         getRunner().proxy(req, rsp);
     }
 

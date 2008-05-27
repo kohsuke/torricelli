@@ -78,7 +78,7 @@ public class Torricelli {
             if(!repoDir.exists())
                 return null;
 
-            r = new Repository(repoDir);
+            r = NEW ? new NewRepository(repoDir) : new Repository(repoDir);
             Repository prev = repositories.putIfAbsent(name, r);
             if(prev!=null)  r=prev;
         }
@@ -194,4 +194,9 @@ public class Torricelli {
         // TODO: dispose every 100 requests or so
         return runner;
     }
+
+    /**
+     * To isolate the front-ending stuff.
+     */
+    public static boolean NEW = Boolean.getBoolean("new");
 }
