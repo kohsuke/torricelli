@@ -34,6 +34,9 @@ changelogtag = '<tag>#tag|escape#</tag>'
 # this is used for files in changelog entry. perhaps it's used elsewhere, too.
 filedifflink = '<file>#file|escape#</file>'
 
+tags = tags.tmpl
+tagentry = '<tag node="#node#" date="#date"/>'
+
 changesetparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filerevparent = '<tr><td class="metatag">parent:</td><td><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{rename%filerename}{node|short}</a></td></tr>'
 filerename = '{file|escape}@'
@@ -42,8 +45,6 @@ fileannotateparent = '<tr><td class="metatag">parent:</td><td><a href="{url}anno
 changesetchild = '<tr><th class="child">child #rev#:</th><td class="child"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filerevchild = '<tr><td class="metatag">child:</td><td><a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 fileannotatechild = '<tr><td class="metatag">child:</td><td><a href="#url#annotate/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
-tags = tags.tmpl
-tagentry = '<li class="tagEntry parity#parity#"><tt class="node">#node#</tt> <a href="#url#rev/#node|short#{sessionvars%urlparameter}">#tag|escape#</a></li>'
 diffblock = '<pre class="parity#parity#">#lines#</pre>'
 changesettag = '<tr><th class="tag">tag:</th><td class="tag">#tag|escape#</td></tr>'
 filediffparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
