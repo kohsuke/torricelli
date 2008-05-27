@@ -35,7 +35,7 @@ changelogtag = '<tag>#tag|escape#</tag>'
 filedifflink = '<file>#file|escape#</file>'
 
 tags = tags.tmpl
-tagentry = '<tag node="#node#" date="#date"/>'
+tagentry = '<tag node="#node#" date="#date" name="#tag|escape#"/>'
 
 changesetparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filerevparent = '<tr><td class="metatag">parent:</td><td><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{rename%filerename}{node|short}</a></td></tr>'

@@ -32,9 +32,11 @@ public class Repository {
     }
 
     /**
-     * Delegate the processing to "hg serv".
+     * Delegate the processing to "hg serve".
+     *
+     * This is mostly for helping development by looking at the backend raw output.
      */
-    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public void doRaw(StaplerRequest req, StaplerResponse rsp) throws IOException {
         getRunner().proxy(req, rsp);
     }
 

@@ -1,4 +1,8 @@
 def layout(body) {
+    layout [:],body
+}
+
+def layout(args,body) {
     def rootURL = request.contextPath // TODO
     response.contentType = "text/html;charset=UTF-8"
     response.outputStream.println '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
@@ -12,7 +16,9 @@ def layout(body) {
             DIV(ID:"wrap") {
                 DIV(ID:"top") {
                     H2 {
-                        A([HREF:"${rootURL}/"],"Torricelli")
+                        if(args.title==null)     title = "Torricelli";
+                        else                     title = "Torricelli \u00BB "+args.title;
+                        A([HREF:"${rootURL}/"],title)
                     }
                 }
 
@@ -47,4 +53,15 @@ def nav(List navDefs) {
             LI("<A HREF='${it.HREF}'>${it.TITLE}</A>")
         }
     }
+}
+
+/**
+ * Generates a hyperlink to a specific revision
+ */
+def rev(String rev) {
+    A(CLASS:"csRevision",HREF:"rev/"+rev,rev)
+}
+
+def author(String author) {
+    SPAN(CLASS:"csAuthor",author)
 }
