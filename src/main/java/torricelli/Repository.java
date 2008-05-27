@@ -48,7 +48,7 @@ public class Repository {
         return getRunner().parse('/'+name+relative);
     }
 
-    private HgServeRunner getRunner() {
+    protected final HgServeRunner getRunner() {
         return Torricelli.INSTANCE.getRunner();
     }
 }
