@@ -54,7 +54,8 @@ public class HgServeRunner {
                 "-p", port,
                 "--webdir-conf", "hgweb.conf",
                 "--config", "web.push_ssl=false",
-                "--config", "web.allow_push=*"
+                "--config", "web.allow_push=*",
+                "--config", "extensions.hgext.hgserveExt="+root.context.getRealPath("/WEB-INF/hgserveExt.py")
         );
         if(Torricelli.NEW)
             inv.arg("--templates", root.context.getRealPath("/WEB-INF/templates"));

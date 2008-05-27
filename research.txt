@@ -88,3 +88,25 @@ web template taken from http://www.oswd.org/design/preview/id/3551
 hg pull
 HGMERGE=/bin/false hg merge
 hg commit
+
+
+// in Python, you can redefine/add new method like this:
+//   see http://mail.python.org/pipermail/python-list/2000-August/049689.html
+class A:
+    def foo(self):
+        print 'foo'
+
+
+def bar(self):
+    print 'bar'
+
+obj1 = A()
+obj1.foo()
+A.foo = bar
+obj1.foo()
+obj2 = A()
+obj2.foo()
+
+
+// enable archive support
+// hg --config web.allow_archive="gz zip" serve -p 8001
