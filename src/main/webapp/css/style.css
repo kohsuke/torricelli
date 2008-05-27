@@ -294,6 +294,10 @@ IMG {
     margin-left:1em;
 }
 
+#files .comment TD {
+    padding-bottom: 1em;
+}
+
 .csRevision, .csAuthor {
     font-weight: bold
 }

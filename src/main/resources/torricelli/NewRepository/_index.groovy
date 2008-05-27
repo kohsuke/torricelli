@@ -34,8 +34,19 @@ l.layout(title:that.name) {
 
 
         H2("Files")
-        UL {
-            that.parse("/file/").file.each { LI(it.@name) }
+        TABLE(ID:"files") {
+            that.parse("/filesummary/?path=/").file.each { f ->
+                TR {
+                    TD { IMG(SRC:"${request.contextPath}/img/16x16/text.gif") }
+                    TD(f.@name)
+                    TD(f.@rev)
+                    TD(f.author.text())
+                }
+                TR(CLASS:"comment") {
+                    TD()
+                    TD(COLSPAN:3, f.summary.text())
+                }
+            }
         }
     }
 
@@ -50,18 +61,20 @@ l.layout(title:that.name) {
             
             def recur // declaration needs to be separate to handle recursion
             recur = { d ->
-                UL {
-                    d.children.values().each { sub ->
-                        LI {
-                            while(true) {
-                                A(HREF:sub.path,sub.name)
-                                next = sub.collapse();
-                                if(next==null)    break;
-                                text('/')
-                                sub=next
+                if(!d.children.isEmpty()) {
+                    UL {
+                        d.children.values().each { sub ->
+                            LI {
+                                while(true) {
+                                    A(HREF:sub.path,sub.name)
+                                    next = sub.collapse();
+                                    if(next==null)    break;
+                                    text('/')
+                                    sub=next
+                                }
                             }
+                            recur(sub);
                         }
-                        recur(sub);
                     }
                 }
             }
