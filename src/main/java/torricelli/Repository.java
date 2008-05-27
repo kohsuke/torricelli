@@ -2,9 +2,15 @@ package torricelli;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
+
+import groovy.util.XmlParser;
+import groovy.util.Node;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Mercurial repository.
@@ -29,7 +35,18 @@ public class Repository {
      * Delegate the processing to "hg serv".
      */
     public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        Torricelli.INSTANCE.getRunner().proxy(req, rsp);
+        getRunner().proxy(req, rsp);
     }
 
+    /**
+     * Sends the request to the backend "hg serve" and parses the result into
+     * the format suitable for processing by Groovy.
+     */
+    public Node parse(String relative) throws SAXException, ParserConfigurationException, IOException {
+        return getRunner().parse('/'+name+relative);
+    }
+
+    private HgServeRunner getRunner() {
+        return Torricelli.INSTANCE.getRunner();
+    }
 }

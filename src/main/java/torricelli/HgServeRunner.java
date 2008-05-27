@@ -3,6 +3,7 @@ package torricelli;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.xml.sax.SAXException;
 import torricelli.util.StreamCopyThread;
 
 import java.io.File;
@@ -11,6 +12,11 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.logging.Logger;
+
+import groovy.util.Node;
+import groovy.util.XmlParser;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Baby-sits "hg serve" process.
@@ -79,6 +85,14 @@ public class HgServeRunner {
 
         URL url = new URL(buf.toString());
         rsp.reverseProxyTo(url,req);
+    }
+
+    /**
+     * Sends the request to the backend "hg serve" and parses the result into
+     * the format suitable for processing by Groovy.
+     */
+    public Node parse(String relative) throws SAXException, ParserConfigurationException, IOException {
+        return new XmlParser().parse("http://localhost:"+port+'/'+relative);
     }
 
     private static final Logger LOGGER = Logger.getLogger(HgServeRunner.class.getName());
