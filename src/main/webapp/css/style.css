@@ -162,10 +162,9 @@ blockquote{
 }
 
 #left {
-	width: 390px;
 	float:left;
 	display: block;
-       margin-left: 20px;
+    margin-left: 20px;
 	display: inline;
 }
 
