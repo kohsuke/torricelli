@@ -7,11 +7,12 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 
-import groovy.util.XmlParser;
 import groovy.util.Node;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.servlet.ServletException;
+
+import torricelli.tasks.TaskThread;
 
 /**
  * Mercurial repository.

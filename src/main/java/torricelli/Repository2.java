@@ -7,6 +7,8 @@ import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 
+import torricelli.tasks.TaskThread;
+
 /**
  * @author Kohsuke Kawaguchi
  */

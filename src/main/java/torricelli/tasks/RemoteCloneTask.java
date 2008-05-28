@@ -1,7 +1,7 @@
 package torricelli.tasks;
 
 import torricelli.HgInvoker;
-import torricelli.TaskThread;
+import torricelli.tasks.TaskThread;
 
 import java.io.File;
 import java.io.IOException;

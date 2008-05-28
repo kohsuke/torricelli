@@ -4,8 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
-import torricelli.util.StreamCopyThread;
-import torricelli.tasks.Proc;
+import torricelli.util.Proc;
 
 import java.io.File;
 import java.io.IOException;
