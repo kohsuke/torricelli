@@ -39,8 +39,8 @@ l.layout(title:that.name) {
                 TR {
                     TD { IMG(SRC:"${request.contextPath}/img/16x16/text.gif") }
                     TD(f.@name)
-                    TD(f.@rev)
-                    TD(f.author.text())
+                    TD { l.rev(f.@rev) }
+                    TD { l.author(f.author.text()) }
                 }
                 TR(CLASS:"comment") {
                     TD()
