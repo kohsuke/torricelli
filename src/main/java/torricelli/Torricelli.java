@@ -6,6 +6,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -25,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Torricelli {
     public final File home;
     public final ServletContext context;
+    public final AdjunctManager adjuncts;
+
     public static Torricelli INSTANCE;
     /**
      * Repository list.
@@ -39,6 +42,14 @@ public class Torricelli {
         this.home = home;
         this.context = context;
         this.runner = new HgServeRunner(this);
+        this.adjuncts = new AdjunctManager(context,getClass().getClassLoader(),"/_");
+    }
+
+    /**
+     * Serves adjuncts from "/_/..." URL.
+     */
+    public AdjunctManager get_() {
+        return adjuncts;
     }
 
     public void cleanUp() {
