@@ -51,6 +51,18 @@ l.layout {
                 }
             }
 
+            H2("Clone a remote repository")
+            form("remoteClone") {
+                TR {
+                    TD("From")
+                    TD { INPUT(TYPE:"text",NAME:"src") }
+                }
+                TR {
+                    TD("To")
+                    TD { INPUT(TYPE:"text",NAME:"name") }
+                }
+            }
+
             H2("Delete a repository")
             form("delete") {
                 TR {

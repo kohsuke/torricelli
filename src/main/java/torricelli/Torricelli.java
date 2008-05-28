@@ -2,6 +2,7 @@ package torricelli;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+
+import torricelli.tasks.RemoteCloneTask;
 
 /**
  * The root object of the web application.
@@ -90,11 +93,15 @@ public class Torricelli {
             if(!repoDir.exists())
                 return null;
 
-            r = NEW ? new Repository2(repoDir) : new Repository(repoDir);
+            r = createRepository(repoDir);
             Repository prev = repositories.putIfAbsent(name, r);
             if(prev!=null)  r=prev;
         }
         return r;
+    }
+
+    private Repository createRepository(File repoDir) throws IOException {
+        return NEW ? new Repository2(repoDir) : new Repository(repoDir);
     }
 
     public LargeText getLogFile() {
@@ -115,11 +122,11 @@ public class Torricelli {
             return;
         }
 
-        // TODO: monitor output
         HgInvoker hgi = new HgInvoker(repoHome,"init");
-        int r = hgi.launch().waitFor();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int r = hgi.launch(baos).join();
         if(r!=0) {
-            sendError("hg init failed: "+r);
+            sendError("hg init failed: "+r+"\n<PRE>"+baos+"</PRE>");
             return;
         }
 
@@ -139,13 +146,27 @@ public class Torricelli {
         }
 
         // create a new mercurial repository
-        // TODO: monitor output
         HgInvoker hgi = new HgInvoker(home,"clone","--quiet",src,name);
-        int r = hgi.launch().waitFor();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int r = hgi.launch(baos).join();
         if(r!=0) {
-            sendError("hg clone failed: "+r);
+            sendError("hg clone failed: "+r+"\n<PRE>"+baos+"</PRE>");
             return;
         }
+
+        rsp.sendRedirect(name);
+    }
+
+    /**
+     * Clones a remote repository to a new one.
+     */
+    public void doRemoteClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
+        if (!checkName(name)) return;
+
+        File newHome = new File(home,name);
+        newHome.mkdirs();
+        Repository r = createRepository(newHome);
+        r.startTask(new RemoteCloneTask(src,newHome));
 
         rsp.sendRedirect(name);
     }

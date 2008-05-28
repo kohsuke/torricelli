@@ -1,10 +1,14 @@
 package torricelli;
 
+import torricelli.util.StreamCopyThread;
+import torricelli.tasks.Proc;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -30,8 +34,8 @@ public class HgInvoker {
         return this;
     }
 
-    public Process launch() throws IOException {
+    public Proc launch(OutputStream out) throws IOException {
         pb.redirectErrorStream(true);
-        return pb.start();
+        return new Proc(pb.start(),out);
     }
 }

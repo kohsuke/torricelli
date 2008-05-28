@@ -5,6 +5,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.xml.sax.SAXException;
 import torricelli.util.StreamCopyThread;
+import torricelli.tasks.Proc;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +28,11 @@ public class HgServeRunner {
     /**
      * "hg serve" process, or null if none.
      */
-    private final Process hgServe;
+    private final Proc hgServe;
     /**
      * TCP/IP port where "hg serve" is listening.
      */
     private final int port;
-    /**
-     * Consumes the output stream from "hg serve".
-     */
-    private final StreamCopyThread hgServeDrainer;
 
     /**
      * Starts "hg serve" process.
@@ -59,10 +56,8 @@ public class HgServeRunner {
         );
         if(Torricelli.NEW)
             inv.arg("--templates", root.context.getRealPath("/WEB-INF/templates"));
-        hgServe = inv.launch();
+        hgServe = inv.launch(System.out);
         LOGGER.info("Started 'hg serve' on port "+port);
-        hgServeDrainer = new StreamCopyThread("drainer for hg serve",hgServe.getInputStream(),System.out);
-        hgServeDrainer.start();
     }
 
     /**

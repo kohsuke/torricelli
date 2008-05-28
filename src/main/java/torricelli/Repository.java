@@ -11,6 +11,7 @@ import groovy.util.XmlParser;
 import groovy.util.Node;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.servlet.ServletException;
 
 /**
  * Mercurial repository.
@@ -25,10 +26,23 @@ public class Repository {
      */
     public final File home;
 
+    /**
+     * Currently running, or last completed task.
+     */
+    protected volatile TaskThread task;
 
     public Repository(File home) throws IOException {
         this.name = home.getName();
         this.home = home;
+    }
+
+    public TaskThread getTask() {
+        return task;
+    }
+
+    public void startTask(TaskThread t) {
+        t.start();
+        this.task = t;
     }
 
     /**
@@ -38,6 +52,16 @@ public class Repository {
      */
     public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
         getRunner().proxy(req, rsp);
+    }
+
+    public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        TaskThread t = task;
+        if(t!=null && t.isProminent()) {
+            req.getView(this,"executingProminentTask").forward(req,rsp);
+        } else {
+            // the default action is to forward to "hg serve"
+            getRunner().proxy(req, rsp);
+        }
     }
 
     /**

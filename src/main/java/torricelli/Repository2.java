@@ -15,13 +15,19 @@ public class Repository2 extends Repository {
         super(home);
     }
 
+    @Override
     public void doIndex(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
         String qs = req.getQueryString();
         if(qs!=null && qs.startsWith("cmd=")) {
             // Mercurial commands. Forward to the backend
             getRunner().proxy(req, rsp);
         } else {
-            req.getView(this,"_index").forward(req,rsp);
+            TaskThread t = task;
+            if(t!=null && t.isProminent()) {
+                req.getView(this,"executingProminentTask").forward(req,rsp);
+            } else {
+                req.getView(this,"_index").forward(req,rsp);
+            }
         }
     }
 
