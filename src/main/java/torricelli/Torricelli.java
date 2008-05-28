@@ -7,6 +7,7 @@ import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
+import org.kohsuke.stapler.framework.io.LargeText;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -89,11 +90,15 @@ public class Torricelli {
             if(!repoDir.exists())
                 return null;
 
-            r = NEW ? new NewRepository(repoDir) : new Repository(repoDir);
+            r = NEW ? new Repository2(repoDir) : new Repository(repoDir);
             Repository prev = repositories.putIfAbsent(name, r);
             if(prev!=null)  r=prev;
         }
         return r;
+    }
+
+    public LargeText getLogFile() {
+        return new LargeText(new File("log"),false);
     }
 
     /**

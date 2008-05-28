@@ -10,8 +10,8 @@ import java.io.IOException;
 /**
  * @author Kohsuke Kawaguchi
  */
-public class NewRepository extends Repository {
-    public NewRepository(File home) throws IOException {
+public class Repository2 extends Repository {
+    public Repository2(File home) throws IOException {
         super(home);
     }
 
