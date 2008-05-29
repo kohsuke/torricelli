@@ -93,7 +93,7 @@ public class Torricelli {
             if(!repoDir.exists())
                 return null;
 
-            r = createRepository(repoDir);
+            r = NEW ? new Repository2(repoDir) : new Repository(repoDir);
             Repository prev = repositories.putIfAbsent(name, r);
             if(prev!=null)  r=prev;
         } else {
@@ -104,10 +104,6 @@ public class Torricelli {
             }
         }
         return r;
-    }
-
-    private Repository createRepository(File repoDir) throws IOException {
-        return NEW ? new Repository2(repoDir) : new Repository(repoDir);
     }
 
     public LargeText getLogFile() {
