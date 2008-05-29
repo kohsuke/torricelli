@@ -1,7 +1,6 @@
 package torricelli.tasks;
 
 import torricelli.HgInvoker;
-import torricelli.tasks.TaskThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +22,7 @@ public class RemoteCloneTask extends TaskThread {
     }
 
     protected void execute(PrintStream log) throws IOException, InterruptedException {
-        HgInvoker hgi = new HgInvoker(local,"clone","-y",url,".");
+        HgInvoker hgi = new HgInvoker(local.getParentFile(),"clone","-y",url,local.getName());
         int r = hgi.launch(log).join();
         if(r !=0) {
             log.println("hg clone failed: "+r);
