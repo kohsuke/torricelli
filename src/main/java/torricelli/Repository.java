@@ -46,6 +46,10 @@ public class Repository {
         this.task = t;
     }
 
+    public void clearTask() {
+        this.task = null;
+    }
+
     /**
      * Delegate the processing to "hg serve".
      *

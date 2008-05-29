@@ -1,6 +1,7 @@
 package torricelli.tasks;
 
 import torricelli.HgInvoker;
+import torricelli.Repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +16,8 @@ public class RemoteCloneTask extends TaskThread {
     private final String url;
     private final File local;
 
-    public RemoteCloneTask(String url, File local) throws IOException {
-        super("Cloning "+url+" to "+local.getName());
+    public RemoteCloneTask(Repository owner, String url, File local) throws IOException {
+        super(owner,"Cloning "+url+" to "+local.getName());
         this.url = url;
         this.local = local;
     }

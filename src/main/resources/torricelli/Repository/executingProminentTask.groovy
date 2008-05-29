@@ -12,5 +12,12 @@ l.layout(title:that.name) {
             img(LargeText,"spinner.gif")
         }
         lt.progressiveText(href:"task/log/progressText",spinner:"spinner",idref:"out")
+
+        // TODO: we need this to show up when the progressText completes, too.
+        if(that.task.isDone()) {
+            FORM(ACTION:"task/clear") {
+                INPUT(TYPE:"submit",VALUE:"OK")
+            }
+        }
     }
 }
