@@ -71,10 +71,11 @@ public abstract class TaskThread extends Thread {
 
         try {
             execute(ps);
+            ps.println("SUCCESS");
         } catch(Failure e) {
-            ps.println("Failed");
+            ps.println("FAILED");
         } catch(InterruptedException e) {
-            ps.println("Aborted");
+            ps.println("ABORTED");
         } catch(Throwable t) {
             t.printStackTrace(ps);
         } finally {
