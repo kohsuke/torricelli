@@ -30,4 +30,9 @@ public class RemoteCloneTask extends TaskThread {
             throw new Failure();
         }
     }
+
+    @Override
+    public boolean isProminent() {
+        return true;
+    }
 }
