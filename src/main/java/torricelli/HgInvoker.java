@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -34,11 +35,14 @@ public class HgInvoker {
 
     public Proc launch(OutputStream out) throws IOException {
         pb.redirectErrorStream(true);
+        // print out the command that it's running
         out.write('$');
         for (String command : commands) {
             out.write(' ');
             out.write(command.getBytes());
         }
+        out.write(System.getProperty("line.separator").getBytes());
+
         return new Proc(pb.start(),out);
     }
 }
