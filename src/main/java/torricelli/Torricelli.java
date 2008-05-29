@@ -171,7 +171,7 @@ public class Torricelli {
 
         File newHome = new File(home,name);
         newHome.mkdirs();
-        Repository r = createRepository(newHome);
+        Repository r = getRepository(name);
         r.startTask(new RemoteCloneTask(src,newHome));
 
         rsp.sendRedirect(name);
