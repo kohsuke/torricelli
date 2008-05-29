@@ -34,6 +34,11 @@ public class HgInvoker {
 
     public Proc launch(OutputStream out) throws IOException {
         pb.redirectErrorStream(true);
+        out.write('$');
+        for (String command : commands) {
+            out.write(' ');
+            out.write(command.getBytes());
+        }
         return new Proc(pb.start(),out);
     }
 }
