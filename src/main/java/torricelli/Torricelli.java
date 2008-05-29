@@ -96,6 +96,12 @@ public class Torricelli {
             r = createRepository(repoDir);
             Repository prev = repositories.putIfAbsent(name, r);
             if(prev!=null)  r=prev;
+        } else {
+            if(!r.home.exists()) {
+                // no longer a valid repository. files might have been removed on the file system
+                repositories.remove(name);
+                r = null;
+            }
         }
         return r;
     }
