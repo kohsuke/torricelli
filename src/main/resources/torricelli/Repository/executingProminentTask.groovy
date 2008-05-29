@@ -11,6 +11,6 @@ l.layout(title:that.name) {
         DIV(ID:"spinner") {
             img(LargeText,"spinner.gif")
         }
-        lt.progressiveText(href:"task/log/progressText",idref:"out")
+        lt.progressiveText(href:"task/log/progressText",spinner:"spinner",idref:"out")
     }
 }
