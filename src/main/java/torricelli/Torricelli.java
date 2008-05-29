@@ -170,6 +170,7 @@ public class Torricelli {
         if (!checkName(name)) return;
 
         File newHome = new File(home,name);
+        newHome.mkdirs();
         Repository r = createRepository(newHome);
         r.startTask(new RemoteCloneTask(src,newHome));
 

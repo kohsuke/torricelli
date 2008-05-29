@@ -22,10 +22,17 @@ public class RemoteCloneTask extends TaskThread {
     }
 
     protected void execute(PrintStream log) throws IOException, InterruptedException {
-        HgInvoker hgi = new HgInvoker(local.getParentFile(),"clone","-y",url,local.getName());
+        HgInvoker hgi = new HgInvoker(local,"init");
         int r = hgi.launch(log).join();
         if(r !=0) {
-            log.println("hg clone failed: "+r);
+            log.println("hg init failed: "+r);
+            throw new Failure();
+        }
+
+        hgi = new HgInvoker(local,"pull","-y","-u",url);
+        r = hgi.launch(log).join();
+        if(r !=0) {
+            log.println("hg update failed: "+r);
             throw new Failure();
         }
     }
