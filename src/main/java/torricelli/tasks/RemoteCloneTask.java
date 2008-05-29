@@ -29,7 +29,7 @@ public class RemoteCloneTask extends TaskThread {
             throw new Failure();
         }
 
-        hgi = new HgInvoker(local,"pull","-y","-u",url);
+        hgi = new HgInvoker(local,"pull","-vyu",url);
         r = hgi.launch(log).join();
         if(r !=0) {
             log.println("hg update failed: "+r);
