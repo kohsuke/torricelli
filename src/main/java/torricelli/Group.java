@@ -230,6 +230,8 @@ public class Group extends AbstractModelObject {
             Node n = new Node();
             n.attr("html", "<TABLE BORDER=\"0\"><TR><TD><IMG SRC=\""+pkgPng+"\" /></TD></TR><TR><TD>"+name+"</TD></TR></TABLE>");
             n.attr(Attribute.URL, name);
+            n.attr("tooltip",
+                    r.getDescription()!=null ? r.getDescription() : name);
             graph.node(n);
             nodes.put(r,n);
         }
