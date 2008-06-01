@@ -91,19 +91,14 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.kohsuke.stapler</groupId>
-      <artifactId>stapler</artifactId>
-      <version>1.74-SNAPSHOT</version>
+      <groupId>org.kohsuke.scotland</groupId>
+      <artifactId>scotland-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
       <version>1.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-      <version>1.1-rc-2</version>
     </dependency>
     <dependency>
       <groupId>org.kohsuke</groupId>
