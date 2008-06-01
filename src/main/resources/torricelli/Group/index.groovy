@@ -33,6 +33,11 @@ l.layout {
     }
 
     l.right {
+        l.nav([
+            [HREF:"configure",  TITLE:"Configure"]
+        ])
+
+
         DIV(CLASS:"box",STYLE:"width:auto;") {
             H2("Create a new repository")
             form("create") {

@@ -15,9 +15,6 @@ l.layout {
                         IMG(SRC:"img/48x48/folder.gif",ALIGN:"middle")
                     }
                     A(HREF:g.name,g.name)
-                    // just for now
-                    text(" ")
-                    A(HREF:g.name+'/configure',STYLE:"font-size:0.5em; margin-left:1em","(configure)")
                 }
             }
         }
@@ -26,7 +23,7 @@ l.layout {
     l.right {
         DIV(CLASS:"box",STYLE:"width:auto;") {
             H2("Create a new group")
-            form("createGroup") {
+            form("create") {
                 TR {
                     TD("Name")
                     TD { INPUT(TYPE:"text",NAME:"name") }

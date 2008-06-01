@@ -99,6 +99,31 @@ public class Group extends AbstractModelObject {
     }
 
     /**
+     * Creates a new repository.
+     */
+    public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
+        if (!checkName(name)) return;
+
+        // create a new mercurial repository
+        File repoHome = new File(home,name);
+        repoHome.mkdirs();
+        if(!repoHome.exists()) {
+            sendError("Failed to create "+repoHome);
+            return;
+        }
+
+        HgInvoker hgi = new HgInvoker(repoHome,"init");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int r = hgi.launch(baos).join();
+        if(r!=0) {
+            sendError("hg init failed: "+r+"\n<PRE>"+baos+"</PRE>");
+            return;
+        }
+
+        rsp.sendRedirect2(name);
+    }
+    
+    /**
      * Clones a repository to a new one.
      */
     public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {

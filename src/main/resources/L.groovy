@@ -49,8 +49,10 @@ def right(body) {
 
 def nav(List navDefs) {
     UL(ID:"nav") {
-        navDefs.each {
-            LI("<A HREF='${it.HREF}'>${it.TITLE}</A>")
+        navDefs.each { n ->
+            LI {
+                A(HREF:n.HREF, n.TITLE)
+            }
         }
     }
 }

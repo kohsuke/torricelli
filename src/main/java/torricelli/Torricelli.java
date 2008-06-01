@@ -1,6 +1,5 @@
 package torricelli;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -112,34 +111,9 @@ public class Torricelli extends AbstractModelObject {
     }
 
     /**
-     * Creates a new repository.
-     */
-    public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
-        if (!checkName(name)) return;
-
-        // create a new mercurial repository
-        File repoHome = new File(home,name);
-        repoHome.mkdirs();
-        if(!repoHome.exists()) {
-            sendError("Failed to create "+repoHome);
-            return;
-        }
-
-        HgInvoker hgi = new HgInvoker(repoHome,"init");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int r = hgi.launch(baos).join();
-        if(r!=0) {
-            sendError("hg init failed: "+r+"\n<PRE>"+baos+"</PRE>");
-            return;
-        }
-
-        rsp.sendRedirect2(name);
-    }
-
-    /**
      * Creates a new group.
      */
-    public void doCreateGroup(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
+    public void doCreate(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
         if (!checkName(name)) return;
 
         if(getGroup(name)!=null) {
