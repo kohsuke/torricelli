@@ -30,7 +30,7 @@ def layout(args,body) {
                 DIV(ID:"footer") {
                     raw("""
                         Powered by <a href="https://torricelli.dev.java.net/">Torricelli</a>
-                        <st:nbsp/><st:nbsp/><st:nbsp/>
+                        &nbsp;&nbsp;&nbsp;
                         HTML design by <a href="http://loadfoo.org/" rel="external">LoadFoO</a>
                     """)
                 }
