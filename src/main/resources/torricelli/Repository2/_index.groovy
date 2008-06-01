@@ -1,12 +1,12 @@
 L l = taglib(L)
 
-l.layout(title:that.name) {
+l.layout(title:my.name) {
     DIV(ID:"center",STYLE:"text-align:center; margin:1em;",
         "Check out this repository by: <tt style='margin-left:1em'>hg clone ${request.requestURL}</tt>")
 
     l.left {
         H2("Recent Changes")
-        that.parse("/changelog").changelog.each { e ->
+        my.parse("/changelog").changelog.each { e ->
             DIV(CLASS:"changelog") {
                 l.rev(e.@rev)
                 text(" by ")
@@ -35,7 +35,7 @@ l.layout(title:that.name) {
 
         H2("Files")
         TABLE(ID:"files") {
-            that.parse("/filesummary/?path=/").file.each { f ->
+            my.parse("/filesummary/?path=/").file.each { f ->
                 TR {
                     TD { IMG(SRC:"${request.contextPath}/img/16x16/text.gif") }
                     TD(f.@name)
@@ -78,7 +78,7 @@ l.layout(title:that.name) {
                     }
                 }
             }
-            recur(that.getRev("tip").dirTree())
+            recur(my.getRev("tip").dirTree())
         }
     }
 }

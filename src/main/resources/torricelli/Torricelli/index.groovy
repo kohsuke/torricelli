@@ -2,7 +2,7 @@ import torricelli.Repository
 
 L l = taglib(L)
 
-List<Repository> repos = that.listRepositories();
+List<Repository> repos = my.listRepositories();
 
 /**
  * Generate a drop-down list of repositories
@@ -24,6 +24,9 @@ l.layout {
                         IMG(SRC:"img/package.gif",ALIGN:"middle")
                     }
                     A(HREF:repo.name,repo.name)
+                    // just for now
+                    text(" ")
+                    A(HREF:repo.name+'/configure',STYLE:"font-size:0.5em; margin-left:1em","(configure)")
                 }
             }
         }
