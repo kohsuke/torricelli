@@ -13,8 +13,8 @@ import torricelli.tasks.TaskThread;
  * @author Kohsuke Kawaguchi
  */
 public class Repository2 extends Repository {
-    public Repository2(File home) throws IOException {
-        super(home);
+    public Repository2(Group group, File home) throws IOException {
+        super(group, home);
     }
 
     @Override

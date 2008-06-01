@@ -37,9 +37,15 @@ public class Repository {
      */
     protected transient volatile TaskThread task;
 
-    public Repository(File home) throws IOException {
+    /**
+     * Repository group that this belongs to.
+     */
+    public final Group group;
+
+    public Repository(Group group, File home) throws IOException {
         this.name = home.getName();
         this.home = home;
+        this.group = group;
         XmlFile xml = getXmlFile();
         if(xml.exists())
             xml.unmarshal(this);
@@ -59,7 +65,7 @@ public class Repository {
 
     public Repository getUpstream() throws IOException {
         if(upstream==null)  return null;
-        return Torricelli.INSTANCE.getRepository(upstream);
+        return group.getRepository(upstream);
     }
 
     public void startTask(TaskThread t) {

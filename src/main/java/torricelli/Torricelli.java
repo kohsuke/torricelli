@@ -30,19 +30,17 @@ import torricelli.tasks.RemoteCloneTask;
  *
  * @author Kohsuke Kawaguchi
  */
-public class Torricelli {
+public class Torricelli extends AbstractModelObject {
     public transient final File home;
     public transient final ServletContext context;
     public transient final AdjunctManager adjuncts;
 
-    private final List<Group> groups = new CopyOnWriteArrayList<Group>();
-
     public static Torricelli INSTANCE;
 
     /**
-     * Repository list.
+     * Group list.
      */
-    private final ConcurrentHashMap<String,Repository> repositories = new ConcurrentHashMap<String,Repository>();
+    private transient final ConcurrentHashMap<String,Group> groups = new ConcurrentHashMap<String,Group>();
 
     private transient volatile HgServeRunner runner;
 
@@ -75,62 +73,45 @@ public class Torricelli {
     }
 
     public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) throws IOException {
-        Group g = getGroup(name);
-        if(g!=null) return g;
-        return getRepository(name);
+        return getGroup(name);
     }
 
-    /**
-     * List up all the repositories in the root
-     */
-    public List<Repository> listRepositories() throws IOException {
-        File[] repos = home.listFiles(new FileFilter() {
+    public List<Group> listGroups() throws IOException {
+        File[] groups = home.listFiles(new FileFilter() {
             public boolean accept(File f) {
-                return new File(f, ".hg").exists();
+                return new File(f, "group.xml").exists();
             }
         });
-        if(repos==null) return Collections.emptyList();
+        if (groups == null) return Collections.emptyList();
 
-        List<Repository> r = new ArrayList<Repository>();
-        for (File repo : repos) {
-            r.add(getRepository(repo.getName()));
-        }
+        List<Group> r = new ArrayList<Group>();
+        for (File group : groups)
+            r.add(getGroup(group.getName()));
 
         return r;
-     }
-
-    public List<Group> getGroups() {
-        return groups;
     }
 
     /**
-     * Gets the repository.
+     * Gets the group.
      */
-    public Repository getRepository(String name) throws IOException {
-        Repository r = repositories.get(name);
-        if(r==null) {
-            File repoDir = new File(home,name);
-            if(!repoDir.exists())
+    public Group getGroup(String name) throws IOException {
+        Group g = groups.get(name);
+        if(g==null) {
+            File groupXml = new File(home,name+"/group.xml");
+            if(!groupXml.exists())
                 return null;
 
-            r = NEW ? new Repository2(repoDir) : new Repository(repoDir);
-            Repository prev = repositories.putIfAbsent(name, r);
-            if(prev!=null)  r=prev;
+            g = new Group(name);
+            Group prev = groups.putIfAbsent(name, g);
+            if(prev!=null)  g=prev;
         } else {
-            if(!r.home.exists()) {
+            if(!g.home.exists()) {
                 // no longer a valid repository. files might have been removed on the file system
-                repositories.remove(name);
-                r = null;
+                groups.remove(name);
+                g = null;
             }
         }
-        return r;
-    }
-
-    public Group getGroup(String name) {
-        for (Group g : groups)
-            if(g.name.equals(name))
-                return g;
-        return null;
+        return g;
     }
 
     public LargeText getLogFile() {
@@ -163,44 +144,6 @@ public class Torricelli {
     }
 
     /**
-     * Clones a repository to a new one.
-     */
-    public void doClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
-        if (!checkName(name)) return;
-
-        Repository srcRepo = getRepository(src);
-        if(srcRepo==null) {
-            sendError("No such repository: "+src);
-            return;
-        }
-
-        // create a new mercurial repository
-        HgInvoker hgi = new HgInvoker(home,"clone","--quiet",src,name);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int r = hgi.launch(baos).join();
-        if(r!=0) {
-            sendError("hg clone failed: "+r+"\n<PRE>"+baos+"</PRE>");
-            return;
-        }
-
-        rsp.sendRedirect(name);
-    }
-
-    /**
-     * Clones a remote repository to a new one.
-     */
-    public void doRemoteClone(StaplerResponse rsp, @QueryParameter("src") String src, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
-        if (!checkName(name)) return;
-
-        File newHome = new File(home,name);
-        newHome.mkdirs();
-        Repository r = getRepository(name);
-        r.startTask(new RemoteCloneTask(r,src,newHome));
-
-        rsp.sendRedirect(name);
-    }
-
-    /**
      * Creates a new group.
      */
     public void doCreateGroup(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
@@ -211,70 +154,21 @@ public class Torricelli {
             return;
         }
 
-        groups.add(new Group(name));
+        new Group(name).save();
         save();
-
-        rsp.sendRedirect(name);
-    }
-
-    /**
-     * Deletes a repository.
-     */
-    public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
-        Repository srcRepo = getRepository(src);
-        if(srcRepo==null) {
-            sendError("No such repository: "+src);
-            return;
-        }
-
-        Delete del = new Delete();
-        del.setProject(new Project());
-        del.setDir(srcRepo.home);
-        del.execute();
-
-        rsp.sendRedirect(".");
     }
 
     /**
      * Make sure that the name is usable as the repository name.
      */
-    private boolean checkName(String name) throws IOException, ServletException {
-        Repository repo = getRepository(name);
-        if(repo!=null) {
-            sendError("Repository "+ name +" already exists");
+    protected boolean checkName(String name) throws IOException, ServletException {
+        Group g = getGroup(name);
+        if(g!=null) {
+            sendError("Group "+ name +" already exists");
             return false;
         }
 
-        if(name==null || name.length()==0) {
-            sendError("No name given");
-            return false;
-        }
-
-        for( int i=0; i<name.length(); i++ ) {
-            char ch = name.charAt(i);
-            if(Character.isISOControl(ch)) {
-                sendError("Control character is not allowed");
-                return false;
-            }
-            if("?*/\\%!@#$^&|<>[]:;".indexOf(ch)!=-1) {
-                sendError("Unsafe character '"+ch+"' is not allowed");
-                return false;
-            }
-        }
-
-        // looks good
-        return true;
-    }
-
-    private void sendError(String format, Object... args) throws IOException, ServletException {
-        sendError(MessageFormat.format(format,args));
-    }
-
-    private void sendError(String msg) throws IOException, ServletException {
-        StaplerRequest req = Stapler.getCurrentRequest();
-        StaplerResponse rsp = Stapler.getCurrentResponse();
-        req.setAttribute("text",msg);
-        rsp.forward(this,"error",req);
+        return super.checkName(name);
     }
 
     public HgServeRunner getRunner() {
