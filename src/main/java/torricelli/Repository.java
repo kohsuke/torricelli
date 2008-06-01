@@ -22,6 +22,10 @@ import torricelli.tasks.TaskThread;
 public class Repository {
     public final String name;
 
+    private String description;
+
+    private String upstream;
+
     /**
      * Root directory of the repository.
      */
@@ -39,6 +43,15 @@ public class Repository {
 
     public TaskThread getTask() {
         return task;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Repository getUpstream() throws IOException {
+        if(upstream==null)  return null;
+        return Torricelli.INSTANCE.getRepository(upstream);
     }
 
     public void startTask(TaskThread t) {
@@ -67,6 +80,13 @@ public class Repository {
             // the default action is to forward to "hg serve"
             getRunner().proxy(req, rsp);
         }
+    }
+
+    public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException {
+        this.upstream = req.getParameter("upstream");
+        this.description = req.getParameter("description");
+
+        rsp.sendRedirect2(".");
     }
 
     /**

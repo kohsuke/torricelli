@@ -9,12 +9,12 @@ l.layout(title:my.name) {
         FORM(METHOD:"post",ACTION:"configSubmit") {
             TABLE(STYLE:"width:100%") {
                 f.entry(name:"Description") {
-                    TEXTAREA("foo")
+                    TEXTAREA(CLASS:"setting-input",NAME:"description", my.description)
                 }
                 f.entry(name:"Upstream") {
-                    SELECT {
+                    SELECT(CLASS:"setting-input",NAME:"upstream") {
                         app.listRepositories().each { r ->
-                            OPTION(r.name)
+                            OPTION(SELECTED:my.upstream==r?"true":null, r.name)
                         }
                     }
                 }
