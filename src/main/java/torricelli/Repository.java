@@ -2,6 +2,7 @@ package torricelli;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.scotland.xstream.XmlFile;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -20,7 +21,7 @@ import torricelli.tasks.TaskThread;
  * @author Kohsuke Kawaguchi
  */
 public class Repository {
-    public final String name;
+    public transient final String name;
 
     private String description;
 
@@ -29,7 +30,7 @@ public class Repository {
     /**
      * Root directory of the repository.
      */
-    public final File home;
+    public transient final File home;
 
     /**
      * Currently running, or last completed task.
@@ -39,6 +40,9 @@ public class Repository {
     public Repository(File home) throws IOException {
         this.name = home.getName();
         this.home = home;
+        XmlFile xml = getXmlFile();
+        if(xml.exists())
+            xml.unmarshal(this);
     }
 
     public TaskThread getTask() {
@@ -47,6 +51,10 @@ public class Repository {
 
     public String getDescription() {
         return description;
+    }
+
+    public XmlFile getXmlFile() {
+        return new XmlFile(new File(home.getParentFile(),name+".xml"));
     }
 
     public Repository getUpstream() throws IOException {
@@ -85,6 +93,8 @@ public class Repository {
     public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException {
         this.upstream = req.getParameter("upstream");
         this.description = req.getParameter("description");
+
+        getXmlFile().write(this);
 
         rsp.sendRedirect2(".");
     }
