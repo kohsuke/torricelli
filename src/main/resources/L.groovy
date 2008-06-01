@@ -65,3 +65,12 @@ def rev(String rev) {
 def author(String author) {
     SPAN(CLASS:"csAuthor",author)
 }
+
+def img(Map args, String href) {
+    args.SRC = "${rootURL}/img/${href}"
+    IMG(args)
+}
+
+def img(String href) {
+    img([:],href)
+}

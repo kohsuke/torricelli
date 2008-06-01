@@ -21,7 +21,7 @@ l.layout {
             repos.each { repo ->
                 DIV {
                     A(HREF:repo.name) {
-                        IMG(SRC:"img/package.gif",ALIGN:"middle")
+                        l.img(ALIGN:"middle", "package.gif")
                     }
                     A(HREF:repo.name,repo.name)
                     // just for now
