@@ -1,8 +1,9 @@
 L l = taglib(L)
 
 l.layout(title:my.name) {
-    DIV(ID:"center",STYLE:"text-align:center; margin:1em;",
-        "Check out this repository by: <tt style='margin-left:1em'>hg clone ${request.requestURL}</tt>")
+    DIV(ID:"center",STYLE:"text-align:center; margin:1em;") {
+        raw("Check out this repository by: <tt style='margin-left:1em'>hg clone ${request.requestURL}</tt>")
+    }
 
     l.left {
         H2("Recent Changes")
@@ -13,6 +14,11 @@ l.layout(title:my.name) {
                 l.author(e.@author)
                 text(" ${e.@date} (${e.@age} ago)")
 
+                e.tag.each { t ->
+                    text(' ')
+                    SPAN(CLASS:"csTag", t.text())
+                }
+
                 DIV(CLASS:"comment",e.description.text())
 
                 DIV(CLASS:"files") {
@@ -20,13 +26,6 @@ l.layout(title:my.name) {
                         DIV(CLASS:"file") {
                             A(HREF:"rev/${e.@rev}/diff/${f.text()}",f.text())
                         }
-                    }
-                }
-
-                def tags = e.tag
-                if(!tags.isEmpty()) {
-                    DIV(CLASS:"tags") {
-                        text("<b>Tags</b>: "+tags*.text().join(","));
                     }
                 }
             }

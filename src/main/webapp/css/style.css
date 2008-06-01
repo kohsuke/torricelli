@@ -301,3 +301,9 @@ IMG {
 .csRevision, .csAuthor {
     font-weight: bold
 }
+
+.csTag {
+    background-color: darkred;
+    font-weight: bold;
+    color: white;
+}
