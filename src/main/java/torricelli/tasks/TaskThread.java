@@ -1,7 +1,9 @@
 package torricelli.tasks;
 
-import org.kohsuke.stapler.framework.io.LargeText;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.framework.io.LargeText;
+import torricelli.Repository;
+import torricelli.Torricelli;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,9 +11,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import torricelli.Torricelli;
-import torricelli.Repository;
 
 /**
  * Asynchronous activity that takes some time to execute.

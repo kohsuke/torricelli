@@ -1,19 +1,16 @@
 package torricelli;
 
+import groovy.util.Node;
+import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.scotland.xstream.XmlFile;
 import org.xml.sax.SAXException;
+import torricelli.tasks.TaskThread;
 
+import javax.servlet.ServletException;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-
-import groovy.util.Node;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.servlet.ServletException;
-
-import torricelli.tasks.TaskThread;
 
 /**
  * Mercurial repository.

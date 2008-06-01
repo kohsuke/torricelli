@@ -1,8 +1,8 @@
 package torricelli.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.IOException;
 
 /**
  * {@link Thread} that copies {@link InputStream} to {@link OutputStream}.

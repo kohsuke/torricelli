@@ -1,7 +1,5 @@
 package torricelli.util;
 
-import torricelli.util.StreamCopyThread;
-
 import java.io.IOException;
 import java.io.OutputStream;
 

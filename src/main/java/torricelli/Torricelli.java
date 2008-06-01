@@ -1,15 +1,12 @@
 package torricelli;
 
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
 import org.kohsuke.stapler.framework.io.LargeText;
-import org.kohsuke.scotland.xstream.XmlFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -20,10 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.text.MessageFormat;
-
-import torricelli.tasks.RemoteCloneTask;
 
 /**
  * The root object of the web application.
@@ -140,7 +133,7 @@ public class Torricelli extends AbstractModelObject {
             return;
         }
 
-        rsp.sendRedirect(name);
+        rsp.sendRedirect2(name);
     }
 
     /**

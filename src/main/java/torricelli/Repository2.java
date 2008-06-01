@@ -2,12 +2,11 @@ package torricelli;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import torricelli.tasks.TaskThread;
 
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-
-import torricelli.tasks.TaskThread;
 
 /**
  * @author Kohsuke Kawaguchi

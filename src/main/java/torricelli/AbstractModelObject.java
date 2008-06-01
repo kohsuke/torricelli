@@ -1,7 +1,7 @@
 package torricelli;
 
-import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
 import javax.servlet.ServletException;
