@@ -9,6 +9,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
 import org.kohsuke.stapler.framework.io.LargeText;
+import org.kohsuke.scotland.xstream.XmlFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -28,11 +29,14 @@ import torricelli.tasks.RemoteCloneTask;
  * @author Kohsuke Kawaguchi
  */
 public class Torricelli {
-    public final File home;
-    public final ServletContext context;
-    public final AdjunctManager adjuncts;
+    public transient final File home;
+    public transient final ServletContext context;
+    public transient final AdjunctManager adjuncts;
+
+    private final List<Group> groups = new ArrayList<Group>();
 
     public static Torricelli INSTANCE;
+
     /**
      * Repository list.
      */
@@ -47,6 +51,14 @@ public class Torricelli {
         this.context = context;
         this.runner = new HgServeRunner(this);
         this.adjuncts = new AdjunctManager(context,getClass().getClassLoader(),"/_");
+
+        XmlFile xml = getXmlFile();
+        if(xml.exists())
+            xml.unmarshal(this);
+    }
+
+    private XmlFile getXmlFile() {
+        return new XmlFile(new File(home,"torricelli.xml"));
     }
 
     /**
@@ -232,6 +244,10 @@ public class Torricelli {
     public HgServeRunner getRunner() {
         // TODO: dispose every 100 requests or so
         return runner;
+    }
+
+    public void save() throws IOException {
+        getXmlFile().write(this);
     }
 
     /**

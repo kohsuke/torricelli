@@ -35,7 +35,7 @@ public class Repository {
     /**
      * Currently running, or last completed task.
      */
-    protected volatile TaskThread task;
+    protected transient volatile TaskThread task;
 
     public Repository(File home) throws IOException {
         this.name = home.getName();
