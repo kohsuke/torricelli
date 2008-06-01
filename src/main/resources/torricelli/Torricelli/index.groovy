@@ -2,7 +2,7 @@ import torricelli.Group
 
 L l = taglib(L)
 
-List<Group> groups = my.getGroups();
+List<Group> groups = my.listGroups();
 
 l.layout {
     l.left {
