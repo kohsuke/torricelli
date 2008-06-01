@@ -37,7 +37,7 @@ public class Repository {
     /**
      * Repository group that this belongs to.
      */
-    public final Group group;
+    public transient final Group group;
 
     public Repository(Group group, File home) throws IOException {
         this.name = home.getName();

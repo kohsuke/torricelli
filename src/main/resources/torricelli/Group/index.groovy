@@ -18,17 +18,7 @@ l.layout {
         H2("Mercurial Repositories")
 
         DIV(CLASS:"repositoryList") {
-            repos.each { repo ->
-                DIV {
-                    A(HREF:repo.name) {
-                        l.img(ALIGN:"middle", "package.gif")
-                    }
-                    A(HREF:repo.name,repo.name)
-                    // just for now
-                    text(" ")
-                    A(HREF:repo.name+'/configure',STYLE:"font-size:0.5em; margin-left:1em","(configure)")
-                }
-            }
+            IMG(SRC:"graph")
         }
     }
 

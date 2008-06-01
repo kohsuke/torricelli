@@ -7,6 +7,12 @@ import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.graphviz.Graph;
+import org.kohsuke.graphviz.Style;
+import org.kohsuke.graphviz.Attribute;
+import org.kohsuke.graphviz.Node;
+import org.kohsuke.graphviz.PageDir;
+import org.kohsuke.graphviz.RankDir;
 import torricelli.tasks.RemoteCloneTask;
 
 import javax.servlet.ServletException;
@@ -16,6 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -177,6 +187,38 @@ public class Group extends AbstractModelObject {
         del.execute();
 
         rsp.sendRedirect(".");
+    }
+
+    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException, InterruptedException {
+        Graph graph = new Graph();
+        //graph.attr(Attribute.RANKDIR, RankDir.LR);
+        graph.attr("rankdir","LR");
+        Style s = new Style();
+        s.attr(Attribute.FONTNAME,"sans serif");
+        s.attr(Attribute.FONTSIZE,10f);
+        s.attr(Attribute.SHAPE, org.kohsuke.graphviz.Shape.NONE);
+        graph.nodeWith(s);
+
+        String pkgPng = Torricelli.INSTANCE.context.getRealPath("/img/48x48/package.png");
+        Map<Repository,Node> nodes = new HashMap<Repository,Node>();
+
+        List<Repository> repositories = listRepositories();
+        for (Repository r : repositories) {
+            String name = r.name;
+            Node n = new Node();
+            n.attr("html", "<TABLE BORDER=\"0\"><TR><TD><IMG SRC=\""+pkgPng+"\" /></TD></TR><TR><TD>"+name+"</TD></TR></TABLE>");
+            n.attr(Attribute.URL, name);
+            graph.node(n);
+            nodes.put(r,n);
+        }
+        for (Repository r : repositories) {
+            Repository up = r.getUpstream();
+            if(up!=null)
+                graph.edge(nodes.get(up),nodes.get(r));
+        }
+
+        rsp.setContentType("image/gif");
+        graph.generateTo(Arrays.asList("dot","-Tgif"),rsp.getOutputStream());
     }
 
     /**
