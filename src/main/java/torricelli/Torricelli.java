@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.text.MessageFormat;
 
 import torricelli.tasks.RemoteCloneTask;
@@ -34,7 +35,7 @@ public class Torricelli {
     public transient final ServletContext context;
     public transient final AdjunctManager adjuncts;
 
-    private final List<Group> groups = new ArrayList<Group>();
+    private final List<Group> groups = new CopyOnWriteArrayList<Group>();
 
     public static Torricelli INSTANCE;
 
@@ -43,7 +44,7 @@ public class Torricelli {
      */
     private final ConcurrentHashMap<String,Repository> repositories = new ConcurrentHashMap<String,Repository>();
 
-    private volatile HgServeRunner runner;
+    private transient volatile HgServeRunner runner;
 
     public Torricelli(File home, ServletContext context) throws IOException {
         INSTANCE = this;
@@ -97,6 +98,10 @@ public class Torricelli {
 
         return r;
      }
+
+    public List<Group> getGroups() {
+        return groups;
+    }
 
     /**
      * Gets the repository.
@@ -201,7 +206,7 @@ public class Torricelli {
     public void doCreateGroup(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
         if (!checkName(name)) return;
 
-        if(getGroup(name)==null) {
+        if(getGroup(name)!=null) {
             sendError("Group {0} exists",name);
             return;
         }

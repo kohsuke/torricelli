@@ -21,7 +21,7 @@ public class Group {
         this.name = name;
     }
 
-    public List<Repository> getRepositories() throws IOException {
+    public List<Repository> listRepositories() throws IOException {
         List<Repository> repos = new ArrayList<Repository>();
         for (String name : members) {
             Repository r = Torricelli.INSTANCE.getRepository(name);

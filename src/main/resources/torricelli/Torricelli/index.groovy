@@ -1,32 +1,23 @@
-import torricelli.Repository
+import torricelli.Group
 
 L l = taglib(L)
 
-List<Repository> repos = my.listRepositories();
-
-/**
- * Generate a drop-down list of repositories
- */
-def repoList = {
-    SELECT(NAME:"src",STYLE:"width:100%") {
-        repos.each { OPTION(it.name) }
-    }
-}
+List<Group> groups = my.getGroups();
 
 l.layout {
     l.left {
-        H2("Mercurial Repositories")
+        H2("Repository Groups")
 
         DIV(CLASS:"repositoryList") {
-            repos.each { repo ->
+            groups.each { g ->
                 DIV {
-                    A(HREF:repo.name) {
-                        IMG(SRC:"img/package.gif",ALIGN:"middle")
+                    A(HREF:g.name) {
+                        IMG(SRC:"img/48x48/folder.gif",ALIGN:"middle")
                     }
-                    A(HREF:repo.name,repo.name)
+                    A(HREF:g.name,g.name)
                     // just for now
                     text(" ")
-                    A(HREF:repo.name+'/configure',STYLE:"font-size:0.5em; margin-left:1em","(configure)")
+                    A(HREF:g.name+'/configure',STYLE:"font-size:0.5em; margin-left:1em","(configure)")
                 }
             }
         }
@@ -39,46 +30,6 @@ l.layout {
                 TR {
                     TD("Name")
                     TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
-
-            H2("Create a new repository")
-            form("create") {
-                TR {
-                    TD("Name")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
-
-            H2("Clone an existing repository")
-            form("clone") {
-                TR {
-                    TD("From")
-                    TD(repoList)
-                }
-                TR {
-                    TD("To")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
-
-            H2("Clone a remote repository")
-            form("remoteClone") {
-                TR {
-                    TD("From")
-                    TD { INPUT(TYPE:"text",NAME:"src") }
-                }
-                TR {
-                    TD("To")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
-
-            H2("Delete a repository")
-            form("delete") {
-                TR {
-                    TD("Name")
-                    TD(repoList)
                 }
             }
         }
