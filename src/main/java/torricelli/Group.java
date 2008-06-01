@@ -3,16 +3,19 @@ package torricelli;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Delete;
+import org.kohsuke.graphviz.Arrow;
+import org.kohsuke.graphviz.Attribute;
+import static org.kohsuke.graphviz.Attribute.ARROWHEAD;
+import static org.kohsuke.graphviz.Attribute.ARROWTAIL;
+import org.kohsuke.graphviz.Graph;
+import org.kohsuke.graphviz.Node;
+import org.kohsuke.graphviz.Style;
 import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.graphviz.Graph;
-import org.kohsuke.graphviz.Style;
-import org.kohsuke.graphviz.Attribute;
-import org.kohsuke.graphviz.Node;
-import org.kohsuke.graphviz.PageDir;
-import org.kohsuke.graphviz.RankDir;
+import org.kohsuke.stapler.jelly.groovy.JellyBuilder;
+import org.xml.sax.SAXException;
 import torricelli.tasks.RemoteCloneTask;
 
 import javax.servlet.ServletException;
@@ -20,12 +23,11 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -189,8 +191,23 @@ public class Group extends AbstractModelObject {
         rsp.sendRedirect(".");
     }
 
-    public void doGraph(StaplerRequest req, StaplerResponse rsp) throws IOException, InterruptedException {
+    /**
+     * Generates the repository dependency graph.
+     */
+    public void doGraph(StaplerResponse rsp) throws IOException, InterruptedException {
+        rsp.setContentType("image/gif");
+        createRepositoryGraph().generateTo(Arrays.asList("dot","-Tgif"),rsp.getOutputStream());
+    }
+
+    public void generateClickableMap(JellyBuilder out) throws IOException, InterruptedException, SAXException {
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        createRepositoryGraph().generateTo(Arrays.asList("dot","-Tcmapx"),buf);
+        out.raw(buf);
+    }
+
+    private Graph createRepositoryGraph() throws IOException {
         Graph graph = new Graph();
+        graph.id(name);
         //graph.attr(Attribute.RANKDIR, RankDir.LR);
         graph.attr("rankdir","LR");
         Style s = new Style();
@@ -211,14 +228,17 @@ public class Group extends AbstractModelObject {
             graph.node(n);
             nodes.put(r,n);
         }
+
+        graph.edgeWith(new Style()
+                .attr(ARROWHEAD, Arrow.NONE)
+                .attr(ARROWTAIL, Arrow.NORMAL));
+
         for (Repository r : repositories) {
             Repository up = r.getUpstream();
             if(up!=null)
                 graph.edge(nodes.get(up),nodes.get(r));
         }
-
-        rsp.setContentType("image/gif");
-        graph.generateTo(Arrays.asList("dot","-Tgif"),rsp.getOutputStream());
+        return graph;
     }
 
     /**
