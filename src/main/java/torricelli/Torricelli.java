@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.text.MessageFormat;
 
 import torricelli.tasks.RemoteCloneTask;
 
@@ -72,7 +73,9 @@ public class Torricelli {
         // no-op
     }
 
-    public Repository getDynamic(String name, StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public Object getDynamic(String name, StaplerRequest req, StaplerResponse rsp) throws IOException {
+        Group g = getGroup(name);
+        if(g!=null) return g;
         return getRepository(name);
     }
 
@@ -116,6 +119,13 @@ public class Torricelli {
             }
         }
         return r;
+    }
+
+    public Group getGroup(String name) {
+        for (Group g : groups)
+            if(g.name.equals(name))
+                return g;
+        return null;
     }
 
     public LargeText getLogFile() {
@@ -186,6 +196,23 @@ public class Torricelli {
     }
 
     /**
+     * Creates a new group.
+     */
+    public void doCreateGroup(StaplerResponse rsp, @QueryParameter("name") String name) throws IOException, InterruptedException, ServletException {
+        if (!checkName(name)) return;
+
+        if(getGroup(name)==null) {
+            sendError("Group {0} exists",name);
+            return;
+        }
+
+        groups.add(new Group(name));
+        save();
+
+        rsp.sendRedirect(name);
+    }
+
+    /**
      * Deletes a repository.
      */
     public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
@@ -232,6 +259,10 @@ public class Torricelli {
 
         // looks good
         return true;
+    }
+
+    private void sendError(String format, Object... args) throws IOException, ServletException {
+        sendError(MessageFormat.format(format,args));
     }
 
     private void sendError(String msg) throws IOException, ServletException {

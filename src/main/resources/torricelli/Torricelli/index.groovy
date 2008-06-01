@@ -34,6 +34,14 @@ l.layout {
 
     l.right {
         DIV(CLASS:"box",STYLE:"width:auto;") {
+            H2("Create a new group")
+            form("createGroup") {
+                TR {
+                    TD("Name")
+                    TD { INPUT(TYPE:"text",NAME:"name") }
+                }
+            }
+
             H2("Create a new repository")
             form("create") {
                 TR {
