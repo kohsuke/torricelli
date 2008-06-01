@@ -156,6 +156,11 @@ public class Group extends AbstractModelObject {
             return;
         }
 
+        // assume the source to be the upstream
+        Repository dst = getRepository(name);
+        dst.setUpstream(srcRepo);
+        dst.save();
+
         rsp.sendRedirect(name);
     }
 

@@ -65,6 +65,10 @@ public class Repository {
         return group.getRepository(upstream);
     }
 
+    public void setUpstream(Repository r) {
+        this.upstream = r.name;
+    }
+
     public void startTask(TaskThread t) {
         t.start();
         this.task = t;
@@ -97,9 +101,12 @@ public class Repository {
         this.upstream = req.getParameter("upstream");
         this.description = req.getParameter("description");
 
-        getXmlFile().write(this);
-
+        save();
         rsp.sendRedirect2(".");
+    }
+
+    public void save() throws IOException {
+        getXmlFile().write(this);
     }
 
     /**

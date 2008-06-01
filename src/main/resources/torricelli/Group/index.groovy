@@ -18,7 +18,8 @@ l.layout {
         H2("Mercurial Repositories")
 
         DIV(CLASS:"repositoryList") {
-            IMG(SRC:"graph")
+            IMG(SRC:"graph",USEMAP:"#${my.name}")
+            my.generateClickableMap(builder)
         }
     }
 
