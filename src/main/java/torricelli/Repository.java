@@ -114,7 +114,7 @@ public class Repository {
      * the format suitable for processing by Groovy.
      */
     public Node parse(String relative) throws SAXException, ParserConfigurationException, IOException {
-        return getRunner().parse('/'+name+relative);
+        return getRunner().parse('/'+group.name+'/'+name+relative);
     }
 
     protected final HgServeRunner getRunner() {
