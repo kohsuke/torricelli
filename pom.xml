@@ -55,8 +55,6 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>7.0.0pre1</version>
         <configuration>
-           <scanIntervalSeconds>3</scanIntervalSeconds>
-
           <!--
             Reload webapp when you hit ENTER. (See JETTY-282 for more)
           -->
