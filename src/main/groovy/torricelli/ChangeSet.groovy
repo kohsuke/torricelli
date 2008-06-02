@@ -25,7 +25,7 @@ class ChangeSet {
 
 
     public Dir dirTree() {
-        Dir root = new Dir(name:"/")
+        Dir root = new Dir(repository:parent, name:"/")
 
         parent.parse("/dirtree/"+key).dir.each {
             Dir d = root;
@@ -53,6 +53,10 @@ class Dir {
      */
     /*final*/ String name;
     /**
+     * Repository.
+     */
+    /*final*/ Repository repository;
+    /**
      * Child directories keyed by their names.
      */
     Map<String,Dir> children = new TreeMap<String,Dir>();
@@ -64,7 +68,7 @@ class Dir {
     Dir child(String name) {
         Dir child = children.get(name)
         if(child==null)
-            children.put(name,child=new Dir(parent:this,name:name))
+            children.put(name,child=new Dir(repository:repository, parent:this, name:name))
         return child;
     }
 
@@ -76,8 +80,8 @@ class Dir {
         return !hasFiles && children.size()==1 ? children.values().asList()[0] : null;
     }
 
-    String getPath() {
-        return parent==null ? "." : parent.path+'/'+name;
+    String getPath(base) {
+        return parent==null ? base : parent.getPath(base)+'/'+name;
     }
 
     @WebMethod(name=["*directoryModel*"])
@@ -89,6 +93,13 @@ class Dir {
         tags.list(getDirectoryModel(),this);
     }
 
+    def parseFileSummary() {
+        return repository.parse("/filesummary/?path="+getPath('/'))
+    }
+
+    /**
+     * Map subdirectories to URL.
+     */
     Dir getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {
         return child(token);
     }

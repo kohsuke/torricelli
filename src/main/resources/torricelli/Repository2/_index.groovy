@@ -34,22 +34,7 @@ l.layout(title:my.name) {
             }
         }
 
-
-        H2("Files")
-        TABLE(ID:"files") {
-            my.parse("/filesummary/?path=/").file.each { f ->
-                TR {
-                    TD { IMG(SRC:"${request.contextPath}/img/16x16/text.gif") }
-                    TD(f.@name)
-                    TD { l.rev(f.@rev) }
-                    TD { l.author(f.author.text()) }
-                }
-                TR(CLASS:"comment") {
-                    TD()
-                    TD(COLSPAN:3, f.summary.text())
-                }
-            }
-        }
+        include(my.getRev("tip").dirTree(),"files.groovy")
     }
 
     l.right {
