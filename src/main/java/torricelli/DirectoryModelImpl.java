@@ -8,6 +8,10 @@ import java.util.Collection;
  * @author Kohsuke Kawaguchi
  */
 public class DirectoryModelImpl extends DirectoryModel<Dir> {
+    public DirectoryModelImpl() {
+        super(".", "directoryModel");
+    }
+
     public String getName(Dir node) {
         return node.getName();
     }
@@ -16,9 +20,8 @@ public class DirectoryModelImpl extends DirectoryModel<Dir> {
         return node.getName();
     }
 
+
     public Collection<Dir> getChildren(Dir parent) {
         return parent.getChildren().values();
     }
-
-    public static final DirectoryModel<Dir> INSTANCE = new DirectoryModelImpl();
 }

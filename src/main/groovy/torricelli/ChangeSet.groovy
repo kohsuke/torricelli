@@ -71,4 +71,13 @@ class Dir {
     String getPath() {
         return parent==null ? "." : parent.path+'/'+name;
     }
+
+    def getDirectoryModel() {
+        return new DirectoryModelImpl();
+    }
+
+    def listDirs(/*DirectoryTags*/ tags) {
+        tags.list(getDirectoryModel(),this);
+    }
+
 }

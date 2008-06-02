@@ -1,5 +1,4 @@
 import org.kohsuke.scotland.dir.DirectoryTags;
-import torricelli.DirectoryModelImpl;
 
 L l = taglib(L)
 DirectoryTags dt = taglib(DirectoryTags);
@@ -62,7 +61,7 @@ l.layout(title:my.name) {
         DIV(CLASS:"box") {
             H2("Directories")
             DIV(CLASS:"dirtree") {
-                dt.list('.',DirectoryModelImpl.INSTANCE,my.getRev("tip").dirTree())
+                my.getRev("tip").dirTree().listDirs(dt);
             }
         }
     }
