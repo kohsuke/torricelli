@@ -1,4 +1,5 @@
 package torricelli
+
 /**
  *
  *
@@ -46,7 +47,7 @@ class Dir {
     /**
      * Child directories keyed by their names.
      */
-    def children = new TreeMap<String,Dir>();
+    Map<String,Dir> children = new TreeMap<String,Dir>();
     /**
      * Does this directory have any files?
      */

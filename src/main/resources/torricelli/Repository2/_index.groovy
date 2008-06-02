@@ -1,4 +1,8 @@
+import org.kohsuke.scotland.dir.DirectoryTags;
+import torricelli.DirectoryModelImpl;
+
 L l = taglib(L)
+DirectoryTags dt = taglib(DirectoryTags);
 
 l.layout(title:my.name) {
     DIV(ID:"center",STYLE:"text-align:center; margin:1em;") {
@@ -57,27 +61,9 @@ l.layout(title:my.name) {
 
         DIV(CLASS:"box") {
             H2("Directories")
-            
-            def recur // declaration needs to be separate to handle recursion
-            recur = { d ->
-                if(!d.children.isEmpty()) {
-                    UL {
-                        d.children.values().each { sub ->
-                            LI {
-                                while(true) {
-                                    A(HREF:sub.path,sub.name)
-                                    next = sub.collapse();
-                                    if(next==null)    break;
-                                    text('/')
-                                    sub=next
-                                }
-                            }
-                            recur(sub);
-                        }
-                    }
-                }
+            DIV(CLASS:"dirtree") {
+                dt.list('.',DirectoryModelImpl.INSTANCE,my.getRev("tip").dirTree())
             }
-            recur(my.getRev("tip").dirTree())
         }
     }
 }
