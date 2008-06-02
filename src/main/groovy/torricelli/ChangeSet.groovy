@@ -1,5 +1,9 @@
 package torricelli
 
+import org.kohsuke.stapler.StaplerRequest
+import org.kohsuke.stapler.StaplerResponse
+import org.kohsuke.stapler.WebMethod
+
 /**
  *
  *
@@ -31,6 +35,10 @@ class ChangeSet {
             d.hasFiles = true
         }
         return root
+    }
+
+    public void doDynamic(StaplerRequest req, StaplerResponse rsp) {
+        rsp.forward(dirTree(),req.getRestOfPath(),req);
     }
 
 }
@@ -72,6 +80,7 @@ class Dir {
         return parent==null ? "." : parent.path+'/'+name;
     }
 
+    @WebMethod(name=["*directoryModel*"])
     def getDirectoryModel() {
         return new DirectoryModelImpl();
     }
@@ -80,4 +89,7 @@ class Dir {
         tags.list(getDirectoryModel(),this);
     }
 
+    Dir getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {
+        return child(token);
+    }
 }

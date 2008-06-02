@@ -32,6 +32,10 @@ public class Repository2 extends Repository {
         }
     }
 
+    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        rsp.forward(getRev("tip"),req.getRestOfPath(),req);
+    }
+
     public ChangeSet getRev(String id) {
         return new ChangeSet(this,id);
     }

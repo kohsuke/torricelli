@@ -1,6 +1,7 @@
 package torricelli;
 
 import org.kohsuke.scotland.dir.DirectoryModel;
+import org.kohsuke.stapler.StaplerResponse;
 
 import java.util.Collection;
 
@@ -9,7 +10,7 @@ import java.util.Collection;
  */
 public class DirectoryModelImpl extends DirectoryModel<Dir> {
     public DirectoryModelImpl() {
-        super(".", "directoryModel");
+        super(".", "*directoryModel*");
     }
 
     public String getName(Dir node) {
@@ -20,8 +21,11 @@ public class DirectoryModelImpl extends DirectoryModel<Dir> {
         return node.getName();
     }
 
-
     public Collection<Dir> getChildren(Dir parent) {
         return parent.getChildren().values();
+    }
+
+    public void doAjax(StaplerResponse rsp) {
+        rsp.setStatus(200);
     }
 }
