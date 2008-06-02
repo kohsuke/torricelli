@@ -60,8 +60,8 @@ def nav(List navDefs) {
 /**
  * Generates a hyperlink to a specific revision
  */
-def rev(String rev) {
-    A(CLASS:"csRevision",HREF:"rev/"+rev,rev)
+def rev(String href, String rev) {
+    A(CLASS:"csRevision",HREF:href,rev)
 }
 
 def author(String author) {

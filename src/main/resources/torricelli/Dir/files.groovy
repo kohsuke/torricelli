@@ -6,7 +6,7 @@ TABLE(ID:"files") {
         TR {
             TD { IMG(SRC:"${rootURL}/img/16x16/text.gif") }
             TD(f.@name)
-            TD { l.rev(f.@rev) }
+            TD { l.rev(f.@name+'?rev='+f.@rev,f.@rev) }
             TD { l.author(f.author.text()) }
         }
         TR(CLASS:"comment") {

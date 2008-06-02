@@ -12,7 +12,7 @@ l.layout(title:my.name) {
         H2("Recent Changes")
         my.parse("/changelog").changelog.each { e ->
             DIV(CLASS:"changelog") {
-                l.rev(e.@rev)
+                l.rev("?rev="+e.@rev,e.@rev)
                 text(" by ")
                 l.author(e.@author)
                 text(" ${e.@date} (${e.@age} ago)")
@@ -27,7 +27,11 @@ l.layout(title:my.name) {
                 DIV(CLASS:"files") {
                     e.file.each { f ->
                         DIV(CLASS:"file") {
-                            A(HREF:"rev/${e.@rev}/diff/${f.text()}",f.text())
+                            A(HREF:f.text(), f.text())
+                            text(' (')
+                            int rev = e.@rev as int;
+                            A(HREF:"${f.text()}?r1=${rev-1}&r2=${rev}", "diff")
+                            text(')')
                         }
                     }
                 }
