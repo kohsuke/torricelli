@@ -82,7 +82,7 @@ class Dir {
 
     @WebMethod(name=["*directoryModel*"])
     def getDirectoryModel() {
-        return new DirectoryModelImpl();
+        return new DirectoryModelImpl(this);
     }
 
     def listDirs(/*DirectoryTags*/ tags) {
