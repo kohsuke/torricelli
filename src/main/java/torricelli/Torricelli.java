@@ -123,6 +123,7 @@ public class Torricelli extends AbstractModelObject {
 
         new Group(name).save();
         save();
+        rsp.sendRedirect(name);
     }
 
     /**
