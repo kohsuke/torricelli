@@ -24,6 +24,8 @@ public class Repository {
 
     private String upstream;
 
+    private ChangeDirection dir;
+
     /**
      * Root directory of the repository.
      */
@@ -65,6 +67,15 @@ public class Repository {
         return group.getRepository(upstream);
     }
 
+    /**
+     * How does the changes flow to the upstream?
+     */
+    public ChangeDirection getChangeDirection() {
+        if(dir==null)
+            return ChangeDirection.UP;  // compatibility with old data
+        return dir;
+    }
+
     public void setUpstream(Repository r) {
         this.upstream = r.name;
     }
@@ -103,6 +114,7 @@ public class Repository {
             up = null;  // no upstream
         this.upstream = up;
         this.description = req.getParameter("description");
+        this.dir = ChangeDirection.valueOf(req.getParameter("dir"));
 
         save();
         rsp.sendRedirect2(".");

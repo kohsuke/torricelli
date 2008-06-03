@@ -10,6 +10,7 @@ import static org.kohsuke.graphviz.Attribute.ARROWTAIL;
 import org.kohsuke.graphviz.Graph;
 import org.kohsuke.graphviz.Node;
 import org.kohsuke.graphviz.Style;
+import org.kohsuke.graphviz.Edge;
 import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
@@ -242,8 +243,11 @@ public class Group extends AbstractModelObject {
 
         for (Repository r : repositories) {
             Repository up = r.getUpstream();
-            if(up!=null)
-                graph.edge(nodes.get(up),nodes.get(r));
+            if(up!=null) {
+                Edge e = new Edge(nodes.get(up),nodes.get(r));
+                r.getChangeDirection().decorate(e);
+                graph.edge(e);
+            }
         }
         return graph;
     }

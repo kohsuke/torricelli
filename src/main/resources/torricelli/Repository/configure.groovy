@@ -1,4 +1,5 @@
-import org.kohsuke.scotland.core.FormTags;
+import org.kohsuke.scotland.core.FormTags
+import torricelli.ChangeDirection;
 L l = taglib(L)
 FormTags f = taglib(org.kohsuke.scotland.core.FormTags)
 
@@ -16,6 +17,13 @@ l.layout(title:my.name) {
                         OPTION(VALUE:"(none)","(none)")
                         my.group.listRepositories().each { r ->
                             OPTION(SELECTED:my.upstream==r?"true":null, r.name)
+                        }
+                    }
+                }
+                f.entry(name:"How the changes flow?") {
+                    SELECT(CLASS:"setting-input",NAME:"dir") {
+                        ChangeDirection.values().each { v ->
+                            OPTION(SELECTED:my.changeDirection==v?"true":null,VALUE:v.name(), v.name().toLowerCase())
                         }
                     }
                 }
