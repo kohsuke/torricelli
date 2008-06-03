@@ -13,6 +13,7 @@ l.layout(title:my.name) {
                 }
                 f.entry(name:"Upstream") {
                     SELECT(CLASS:"setting-input",NAME:"upstream") {
+                        OPTION(VALUE:"(none)","(none)")
                         my.group.listRepositories().each { r ->
                             OPTION(SELECTED:my.upstream==r?"true":null, r.name)
                         }

@@ -98,7 +98,10 @@ public class Repository {
     }
 
     public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException {
-        this.upstream = req.getParameter("upstream");
+        String up = req.getParameter("upstream");
+        if(up.equals("(none)"))
+            up = null;  // no upstream
+        this.upstream = up;
         this.description = req.getParameter("description");
 
         save();
