@@ -5,8 +5,9 @@ TABLE(ID:"files") {
     my.parseFileSummary().file.each { f ->
         TR {
             TD { IMG(SRC:"${rootURL}/img/16x16/text.gif") }
-            TD(f.@name)
-            TD { l.rev(f.@name+'?rev='+f.@rev,f.@rev) }
+            TD { A(HREF:f.@name,f.@name) }
+            TD { l.rev(f.@rev) }
+            // TODO: age
             TD { l.author(f.author.text()) }
         }
         TR(CLASS:"comment") {

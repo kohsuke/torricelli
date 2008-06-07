@@ -1,3 +1,6 @@
+import org.kohsuke.stapler.Stapler;
+import torricelli.Repository;
+
 def layout(body) {
     layout [:],body
 }
@@ -62,6 +65,14 @@ def nav(List navDefs) {
  * Generates a hyperlink to a specific revision
  */
 def rev(String href, String rev) {
+    A(CLASS:"csRevision",HREF:href,rev)
+}
+
+/**
+ * Generates a hyperlink to a specific revision
+ */
+def rev(String rev) {
+    def href = Stapler.currentRequest.findAncestor(Repository).url+"/changeset/"+rev;
     A(CLASS:"csRevision",HREF:href,rev)
 }
 

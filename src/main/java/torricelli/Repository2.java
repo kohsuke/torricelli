@@ -1,9 +1,9 @@
 package torricelli;
 
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.WebMethod;
-import org.kohsuke.graphviz.Dir;
 import torricelli.tasks.TaskThread;
 
 import javax.servlet.ServletException;
@@ -45,5 +45,12 @@ public class Repository2 extends Repository {
     @WebMethod(name="-")
     public ChangeSet getRev(String id) {
         return new ChangeSet(this,id);
+    }
+
+    /**
+     * URL to this repository, starting from context path in the '/abc/def' form.
+     */
+    public String getUrl() {
+        return Stapler.getCurrentRequest().findAncestor(this).getUrl();
     }
 }
