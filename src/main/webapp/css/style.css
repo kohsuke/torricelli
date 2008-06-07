@@ -268,15 +268,15 @@ blockquote{
 
 IMG {
     vertical-align: middle;
+    border:0;
 }
 
 .groupList {
     font-size: 1.5em;
 }
 
-.repositoryList IMG {
+.groupList IMG {
     margin-right:0.5em;
-    border:0;
 }
 
 .changelog {
