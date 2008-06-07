@@ -1,4 +1,5 @@
 import torricelli.Repository
+import torricelli.Group.Def;
 
 L l = taglib(L)
 
@@ -28,9 +29,9 @@ l.layout {
     }
 
     l.right {
-        l.nav([
-            [HREF:"configure",  TITLE:"Configure"]
-        ])
+        l.right {
+            Def.navList(l);
+        }
 
 
         DIV(CLASS:"box",STYLE:"width:auto;") {

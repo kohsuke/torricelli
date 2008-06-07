@@ -1,3 +1,5 @@
+import torricelli.Group.Def;
+
 L l = taglib(L)
 
 l.layout(title:my.name) {
@@ -10,9 +12,7 @@ l.layout(title:my.name) {
     }
 
 
-        l.right {
-            l.nav([
-                [HREF:"delete",  TITLE:"Delete this group"]
-            ])
-        }
+    l.right {
+        Def.navList(l);
+    }
 }
