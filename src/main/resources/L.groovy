@@ -48,10 +48,11 @@ def right(body) {
 }
 
 def nav(List navDefs) {
+    def uri = request.getRequestURI();
     UL(ID:"nav") {
         navDefs.each { n ->
             LI {
-                A(HREF:n.HREF, n.TITLE)
+                A(HREF:n.HREF,CLASS:(uri.endsWith(n.HREF)?"current":null), n.TITLE)
             }
         }
     }
