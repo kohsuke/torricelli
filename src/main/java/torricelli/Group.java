@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -42,6 +43,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Group extends AbstractModelObject {
     public transient final String name;
     public transient final File home;
+
+    private transient final UUID uuid = UUID.randomUUID();
 
     /**
      * Repository list.
@@ -213,7 +216,7 @@ public class Group extends AbstractModelObject {
 
     private Graph createRepositoryGraph() throws IOException {
         Graph graph = new Graph();
-        graph.id(name);
+        graph.id(uuid.toString());
         //graph.attr(Attribute.RANKDIR, RankDir.LR);
         graph.attr("rankdir","LR");
         Style s = new Style();
@@ -247,7 +250,7 @@ public class Group extends AbstractModelObject {
                 Edge e = new Edge(nodes.get(up),nodes.get(r));
                 r.getChangeDirection().decorate(e);
                 graph.edge(e);
-            }
+        }
         }
         return graph;
     }
