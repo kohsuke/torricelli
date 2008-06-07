@@ -22,7 +22,7 @@ l.layout {
             if(repos.isEmpty()) {
                 text("No repositories exist yet. Please create one.")
             } else {
-                IMG(SRC:"graph",USEMAP:"#${my.name}")
+                IMG(SRC:"graph",USEMAP:"#${my.id}")
                 my.generateClickableMap(builder)
             }
         }
