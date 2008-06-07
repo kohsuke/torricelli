@@ -216,7 +216,7 @@ public class Group extends AbstractModelObject {
 
     private Graph createRepositoryGraph() throws IOException {
         Graph graph = new Graph();
-        graph.id(uuid.toString());
+        graph.id("graph"+uuid.toString().replace("-",""));
         //graph.attr(Attribute.RANKDIR, RankDir.LR);
         graph.attr("rankdir","LR");
         Style s = new Style();
