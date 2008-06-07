@@ -93,3 +93,13 @@ hg commit
 
 // enable archive support
 // hg --config web.allow_archive="gz zip" serve -p 8001
+
+
+
+// URL hierachy design
+
+Changeset view
+  repository/-/NNN
+Repository view
+  repository/-/NNN/manifest/...path...
+  repository/...path...
