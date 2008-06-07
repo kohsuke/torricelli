@@ -29,7 +29,7 @@ l.layout(title:my.name) {
                         DIV(CLASS:"file") {
                             A(HREF:f.text(), f.text())
                             text(' (')
-                            int rev = e.@rev as int;
+                            int rev = Integer.parseInt(e.@rev);
                             A(HREF:"${f.text()}?r1=${rev-1}&r2=${rev}", "diff")
                             text(')')
                         }
