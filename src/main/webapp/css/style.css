@@ -270,10 +270,6 @@ IMG {
     vertical-align: middle;
 }
 
-.repositoryList {
-    font-size: 1.5em;
-}
-
 .repositoryList IMG {
     margin-right:0.5em;
     border:0;

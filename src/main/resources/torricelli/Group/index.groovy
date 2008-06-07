@@ -18,8 +18,12 @@ l.layout {
         H2("Mercurial Repositories")
 
         DIV(CLASS:"repositoryList") {
-            IMG(SRC:"graph",USEMAP:"#${my.name}")
-            my.generateClickableMap(builder)
+            if(repos.isEmpty()) {
+                text("No repositories exist yet. Please create one.")
+            } else {
+                IMG(SRC:"graph",USEMAP:"#${my.name}")
+                my.generateClickableMap(builder)
+            }
         }
     }
 
