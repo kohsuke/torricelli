@@ -183,21 +183,15 @@ public class Group extends AbstractModelObject {
     }
 
     /**
-     * Deletes a repository.
+     * Deletes a repository group.
      */
     public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
-        Repository srcRepo = getRepository(src);
-        if(srcRepo==null) {
-            sendError("No such repository: "+src);
-            return;
-        }
-
         Delete del = new Delete();
         del.setProject(new Project());
-        del.setDir(srcRepo.home);
+        del.setDir(home);
         del.execute();
 
-        rsp.sendRedirect(".");
+        rsp.sendRedirect("..");
     }
 
     /**

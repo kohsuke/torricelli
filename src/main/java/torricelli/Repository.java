@@ -4,7 +4,10 @@ import groovy.util.Node;
 import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.QueryParameter;
 import org.xml.sax.SAXException;
+import org.apache.tools.ant.taskdefs.Delete;
+import org.apache.tools.ant.Project;
 import torricelli.tasks.TaskThread;
 
 import javax.servlet.ServletException;
@@ -118,6 +121,18 @@ public class Repository {
 
         save();
         rsp.sendRedirect2(".");
+    }
+
+    /**
+     * Deletes a repository.
+     */
+    public void doDoDelete(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
+        Delete del = new Delete();
+        del.setProject(new Project());
+        del.setDir(home);
+        del.execute();
+
+        rsp.sendRedirect("..");
     }
 
     public void save() throws IOException {
