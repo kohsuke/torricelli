@@ -2,6 +2,8 @@ package torricelli;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.WebMethod;
+import org.kohsuke.graphviz.Dir;
 import torricelli.tasks.TaskThread;
 
 import javax.servlet.ServletException;
@@ -27,15 +29,20 @@ public class Repository2 extends Repository {
             if(t!=null && t.isProminent()) {
                 req.getView(this,"executingProminentTask").forward(req,rsp);
             } else {
-                req.getView(this,"_index").forward(req,rsp);
+                rsp.sendRedirect2("browse/");
+//                req.getView(this,"_index").forward(req,rsp);
             }
         }
     }
 
-    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        rsp.forward(getRev("tip"),req.getRestOfPath(),req);
+    /**
+     * Binds the tip manifest under the browse/ URL.
+     */
+    public Dir getBrowse() {
+        return getRev("tip").manifest();
     }
 
+    @WebMethod(name="-")
     public ChangeSet getRev(String id) {
         return new ChangeSet(this,id);
     }
