@@ -8,7 +8,7 @@ l.layout {
     l.left {
         H2("Repository Groups")
 
-        DIV(CLASS:"repositoryList") {
+        DIV(CLASS:"groupList") {
             groups.each { g ->
                 DIV {
                     A(HREF:g.name) {
