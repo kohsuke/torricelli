@@ -12,6 +12,7 @@ l.layout(title:my.key) {
             text(" by ")
             l.author(my.author)
             text(" on ${my.dateString} ")
+            raw("(<A HREF='patch'>patch</A>) ")
             l.tags(my.tags)
         }
         PRE(my.description)
