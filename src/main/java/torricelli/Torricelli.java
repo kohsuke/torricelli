@@ -15,7 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  * The root object of the web application.
@@ -152,4 +157,24 @@ public class Torricelli extends AbstractModelObject {
      * To isolate the front-ending stuff.
      */
     public static boolean NEW = Boolean.getBoolean("new");
+
+    /**
+     * Date format. Notice that {@link SimpleDateFormat} is thread unsafe.
+     */
+    private static final ThreadLocal<SimpleDateFormat> HTTP_DATE_FORMAT =
+        new ThreadLocal<SimpleDateFormat>() {
+            protected SimpleDateFormat initialValue() {
+                // RFC1945 section 3.3 Date/Time Formats states that timezones must be in GMT
+                SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+                format.setTimeZone(TimeZone.getTimeZone("GMT"));
+                return format;
+            }
+        };
+
+    /**
+     * Parses the RFC 822 date format used by Mercurial.
+     */
+    public static Date parseDate(String s) throws ParseException {
+        return HTTP_DATE_FORMAT.get().parse(s);
+    }
 }

@@ -2,6 +2,7 @@ package torricelli
 
 import org.kohsuke.stapler.StaplerRequest
 import org.kohsuke.stapler.StaplerResponse
+import java.text.DateFormat
 
 /**
  * Represents a change set.
@@ -29,7 +30,7 @@ class ChangeSet {
 
     String author;
 
-    long date;
+    private Date date;
 
     String summary;
     String description;
@@ -74,7 +75,7 @@ class ChangeSet {
         node = dom.@node;
         rev = dom.@rev;
         author = dom.@author;
-        date = 0; // TODO
+        date = Torricelli.parseDate(dom.@date);
         summary = dom.summary.text();
         description = dom.description.text();
         parents = dom.parent*.@node;
@@ -82,6 +83,10 @@ class ChangeSet {
         files = dom.file*.text();
         tags = dom.tag*.text();
         // TODO: diff
+    }
+
+    public String getDateString() {
+        return DateFormat.getInstance().format(date);
     }
 
     public void doDynamic(StaplerRequest req, StaplerResponse rsp) {

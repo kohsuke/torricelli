@@ -11,9 +11,7 @@ l.layout(title:my.key) {
             l.rev(my.node)
             text(" by ")
             l.author(my.author)
-            text(" on ")
-            // TODO: date
-            
+            text(" on ${my.dateString} ")
             l.tags(my.tags)
         }
         PRE(my.description)
