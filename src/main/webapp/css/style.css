@@ -316,3 +316,13 @@ IMG {
 #right .dirtree UL {
     margin: 0 0 !important;
 }
+
+/*** prev/next links in changesets ***/
+TABLE.changeSetNav {
+    width: 100%;
+    margin-bottom: 0.5em;
+}
+
+TABLE.changeSetNav TD.next {
+    text-align: right;
+}
