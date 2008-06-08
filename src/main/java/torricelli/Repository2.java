@@ -3,7 +3,6 @@ package torricelli;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-import org.kohsuke.stapler.WebMethod;
 import torricelli.tasks.TaskThread;
 
 import javax.servlet.ServletException;
@@ -39,11 +38,10 @@ public class Repository2 extends Repository {
      * Binds the tip manifest under the browse/ URL.
      */
     public Dir getBrowse() {
-        return getRev("tip").manifest();
+        return getChangeSet("tip").manifest();
     }
 
-    @WebMethod(name="-")
-    public ChangeSet getRev(String id) {
+    public ChangeSet getChangeSet(String id) {
         return new ChangeSet(this,id);
     }
 

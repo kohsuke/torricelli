@@ -38,7 +38,7 @@ l.layout(title:my.name) {
             }
         }
 
-        include(my.getRev("tip").dirTree(),"files.groovy")
+        include(my.getChangeSet("tip").dirTree(),"files.groovy")
     }
 
     l.right {
@@ -50,7 +50,7 @@ l.layout(title:my.name) {
         DIV(CLASS:"box") {
             H2("Directories")
             DIV(CLASS:"dirtree") {
-                my.getRev("tip").dirTree().listDirs(dt);
+                my.getChangeSet("tip").dirTree().listDirs(dt);
             }
         }
     }

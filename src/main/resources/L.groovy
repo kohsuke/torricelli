@@ -72,12 +72,22 @@ def rev(String href, String rev) {
  * Generates a hyperlink to a specific revision
  */
 def rev(String rev) {
-    def href = Stapler.currentRequest.findAncestor(Repository).url+"/changeset/"+rev;
+    def href = Stapler.currentRequest.findAncestor(Repository).url+"/changeSet/"+rev;
     A(CLASS:"csRevision",HREF:href,rev)
 }
 
 def author(String author) {
     SPAN(CLASS:"csAuthor",author)
+}
+
+/**
+ * Generates a tag list.
+ */
+def tags(tagList) {
+    tagList.each { t ->
+        text(' ')
+        SPAN(CLASS:"csTag", t)
+    }
 }
 
 def img(Map args, String href) {

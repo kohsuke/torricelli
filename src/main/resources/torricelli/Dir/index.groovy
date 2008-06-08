@@ -13,10 +13,7 @@ l.layout(title:my.name) {
                 l.author(e.@author)
                 text(" ${e.@date} (${e.@age} ago)")
 
-                e.tag.each { t ->
-                    text(' ')
-                    SPAN(CLASS:"csTag", t.text())
-                }
+                l.tags(e.tag*.text())
 
                 DIV(CLASS:"comment",e.description.text())
 

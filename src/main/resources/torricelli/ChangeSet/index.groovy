@@ -4,34 +4,27 @@ l.layout(title:my.key) {
     l.left {
         // TODO: prev/next link
 
-        my.parse("/changelog").changelog.each { e ->
-            DIV(CLASS:"changelog") {
-                l.rev("?rev="+e.@rev,e.@rev)
-                text(" by ")
-                l.author(e.@author)
-                text(" ${e.@date} (${e.@age} ago)")
+        // make sure we got the data to display
+        my.parse();
 
-                e.tag.each { t ->
-                    text(' ')
-                    SPAN(CLASS:"csTag", t.text())
-                }
+        DIV {
+            l.rev(my.node)
+            text(" by ")
+            l.author(my.author)
+            text(" on ")
+            // TODO: date
+            
+            l.tags(my.tags)
+        }
+        PRE(my.description)
 
-                DIV(CLASS:"comment",e.description.text())
-
-                DIV(CLASS:"files") {
-                    e.file.each { f ->
-                        DIV(CLASS:"file") {
-                            A(HREF:f.text(), f.text())
-                            text(' (')
-                            int rev = Integer.parseInt(e.@rev);
-                            A(HREF:"${f.text()}?r1=${rev-1}&r2=${rev}", "diff")
-                            text(')')
-                        }
-                    }
+        UL {
+            my.files.each { f->
+                LI {
+                    A(HREF:my.parent.url+'/browse/'+f,f)
+                    // TODO: diff
                 }
             }
         }
-
-        include(my.getRev("tip").dirTree(),"files.groovy")
     }
 }
