@@ -7,10 +7,9 @@ shortlogentry = shortlogentry.tmpl
 naventry = '<a href="{url}log/{node|short}{sessionvars%urlparameter}">{label|escape}</a> '
 navshortentry = '<a href="{url}shortlog/{node|short}{sessionvars%urlparameter}">{label|escape}</a> '
 filenaventry = '<a href="{url}log/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{label|escape}</a> '
-filenodelink = '<a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#file|escape#</a> '
 fileellipses = '...'
 searchentry = changelogentry.tmpl
-changeset = changeset.tmpl
+
 filerevision = filerevision.tmpl
 fileannotate = fileannotate.tmpl
 filediff = filediff.tmpl
@@ -18,10 +17,11 @@ filelog = filelog.tmpl
 fileline = '<div class="parity#parity#"><span class="lineno">#linenumber#</span>#line|escape#</div>'
 filelogentry = filelogentry.tmpl
 annotateline = '<tr class="parity#parity#"><td class="annotate"><a href="#url#annotate/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#author|obfuscate#@#rev#</a></td><td><pre>#line|escape#</pre></td></tr>'
-difflineplus = '<span class="plusline">#line|escape#</span>'
-difflineminus = '<span class="minusline">#line|escape#</span>'
-difflineat = '<span class="atline">#line|escape#</span>'
-diffline = '#line|escape#'
+diffblock = '<diff>#lines#</diff>'
+difflineplus = '<line type="plus">#line|escape#</line>'
+difflineminus = '<line type="minus">#line|escape#</line>'
+difflineat = '<line type="at">#line|escape#</line>'
+diffline = '<line>#line|escape#</line>'
 
 changelog = changelog.tmpl
 changelogentry = changelogentry.tmpl
@@ -38,16 +38,20 @@ manifest = manifest.tmpl
 manifestdirentry = '<dir name="#basename|escape#" />'
 manifestfileentry = '<file permissions="#permissions|permissions#" date="#date|date#" size="#size#" name="#basename|escape#"/>'
 
-changesetparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
+changeset = changeset.tmpl
+changesetparent = '<parent rev="#rev#" node="#node|short#" />'
+changesetchild = '<child rev="#rev#" node="#node|short#" />'
+changesettag = '<tag>#tag|escape#</tag>'
+# this is used for files in changeset entry
+filenodelink = '<file>#file|escape#</file>'
+
 filerevparent = '<tr><td class="metatag">parent:</td><td><a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{rename%filerename}{node|short}</a></td></tr>'
 filerename = '{file|escape}@'
 filelogrename = '<tr><th>base:</th><td><a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#file|escape#@#node|short#</a></td></tr>'
 fileannotateparent = '<tr><td class="metatag">parent:</td><td><a href="{url}annotate/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{rename%filerename}{node|short}</a></td></tr>'
-changesetchild = '<tr><th class="child">child #rev#:</th><td class="child"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filerevchild = '<tr><td class="metatag">child:</td><td><a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 fileannotatechild = '<tr><td class="metatag">child:</td><td><a href="#url#annotate/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
-diffblock = '<pre class="parity#parity#">#lines#</pre>'
-changesettag = '<tr><th class="tag">tag:</th><td class="tag">#tag|escape#</td></tr>'
+
 filediffparent = '<tr><th class="parent">parent #rev#:</th><td class="parent"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filelogparent = '<tr><th>parent #rev#:</th><td><a href="#url#file/#node|short#/#file|urlescape#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
 filediffchild = '<tr><th class="child">child #rev#:</th><td class="child"><a href="#url#rev/#node|short#{sessionvars%urlparameter}">#node|short#</a></td></tr>'
