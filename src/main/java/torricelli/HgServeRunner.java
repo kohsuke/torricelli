@@ -87,7 +87,9 @@ public class HgServeRunner {
      * the format suitable for processing by Groovy.
      */
     public Node parse(String relative) throws SAXException, ParserConfigurationException, IOException {
-        return new XmlParser().parse("http://localhost:"+port+'/'+relative);
+        XmlParser p = new XmlParser();
+        p.setTrimWhitespace(false);
+        return p.parse("http://localhost:"+port+'/'+relative);
     }
 
     private static final Logger LOGGER = Logger.getLogger(HgServeRunner.class.getName());

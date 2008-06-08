@@ -50,6 +50,8 @@ class ChangeSet {
 
     List<String> tags;
 
+    List<String> diffLines;
+
     public ChangeSet(parent,key) {
         this.parent = parent;
         this.key = key;
@@ -82,7 +84,7 @@ class ChangeSet {
         children = dom.child*.@node;
         files = dom.file*.text();
         tags = dom.tag*.text();
-        // TODO: diff
+        diffLines = dom.diff.line*.text();
     }
 
     public String getDateString() {
@@ -91,6 +93,14 @@ class ChangeSet {
 
     public void doDynamic(StaplerRequest req, StaplerResponse rsp) {
         rsp.forward(manifest(),req.getRestOfPath(),req);
+    }
+
+    public void doPatch(StaplerResponse rsp) {
+        parse();
+
+        rsp.contentType = "text/plain; charset=UTF-8";
+        def w = rsp.writer;
+        diffLines.each { w.print(it) }
     }
 
 }
