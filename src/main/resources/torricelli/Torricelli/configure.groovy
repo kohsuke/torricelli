@@ -11,14 +11,12 @@ FormTags f = taglib(FormTags);
 DescriptorFormTags ft = taglib(DescriptorFormTags)
 
 l.layout {
-    l.left {
-        H2("Configuration")
+    H2("Configuration")
 
-        FORM {
-            TABLE {
-                f.block {
-                    ft.heteroList("notifier",null,true,Descriptor.ALL.subList(CommitListener),null)
-                }
+    FORM {
+        TABLE(STYLE:"width:100%") {
+            f.block {
+                ft.heteroList("notifier",null,true,Descriptor.ALL.subList(CommitListener),null)
             }
         }
     }
