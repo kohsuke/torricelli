@@ -1,3 +1,5 @@
+package torricelli;
+
 import org.kohsuke.stapler.Stapler;
 import torricelli.Repository
 import torricelli.ChangeSet;
@@ -16,7 +18,7 @@ def layout(args,body) {
             TITLE("Torricelli")
             LINK(REL:"stylesheet",TYPE:"text/css",HREF:"${rootURL}/css/style.css")
         }
-        BODY {
+        BODY(CLASS:"yui-skin-sam") {
             DIV(ID:"wrap") {
                 DIV(ID:"top") {
                     H2 {

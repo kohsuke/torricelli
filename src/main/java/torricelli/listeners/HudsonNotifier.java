@@ -6,6 +6,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.Stapler;
 import torricelli.Repository;
 import torricelli.Torricelli;
+import torricelli.TorricelliDescriptor;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -47,8 +48,19 @@ public class HudsonNotifier extends CommitListener {
     }
 
     public Descriptor getDescriptor() {
-        // TODO
-        throw new UnsupportedOperationException();
+        return DESCRIPTOR;
+    }
+
+    public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
+
+    public static final class DescriptorImpl extends TorricelliDescriptor<HudsonNotifier> {
+        private DescriptorImpl() {
+            super(HudsonNotifier.class);
+        }
+
+        public String getDisplayName() {
+            return "Notify Hudson";
+        }
     }
 
     private static final Logger LOGGER = Logger.getLogger(HudsonNotifier.class.getName());

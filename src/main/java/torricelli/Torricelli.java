@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
+import torricelli.listeners.HudsonNotifier;
+
 /**
  * The root object of the web application.
  *
@@ -72,6 +74,9 @@ public class Torricelli extends AbstractModelObject implements StaplerProxy {
             xml.unmarshal(this);
 
         this.serverIdString = serverId.toString();
+
+        // load notifiers
+        HudsonNotifier.DESCRIPTOR.getDisplayName();
     }
 
     private XmlFile getXmlFile() {
