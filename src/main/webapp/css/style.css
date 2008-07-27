@@ -25,7 +25,7 @@ h2 {
 	padding:0px;
 }
 
-ul {
+ul.bullet {
 	font-size: 10px;
 	margin:0;
 	padding:0;
@@ -152,12 +152,12 @@ blockquote{
 /**** Content ***/
 
 
-#left ul {
+#left ul.bullet {
 	padding: 15px 0 15px 35px;
 	margin:0;
 }
 
-#left li {
+#left li.bullet {
 	margin-bottom:5px;
 }
 
