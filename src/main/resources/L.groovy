@@ -1,5 +1,6 @@
 import org.kohsuke.stapler.Stapler;
-import torricelli.Repository;
+import torricelli.Repository
+import torricelli.ChangeSet;
 
 def layout(body) {
     layout [:],body
@@ -74,6 +75,12 @@ def rev(String href, String rev) {
 def rev(String rev) {
     def href = Stapler.currentRequest.findAncestor(Repository).url+"/changeSet/"+rev;
     A(CLASS:"csRevision",HREF:href,rev)
+}
+
+def rev(ChangeSet cs) {
+    def href = "${cs.parent.url}/changeSet/${cs.key}/"
+    cs.parse()
+    A(CLASS:"csRevision",HREF:href,cs.summary)
 }
 
 def author(String author) {

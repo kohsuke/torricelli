@@ -3,6 +3,10 @@ L l = taglib(L)
 // make sure we got the data to display
 my.parse();
 
+def siblingLink(node) {
+    l.rev(my.repository.getChangeSet(node))
+}
+
 l.layout(title:my.key) {
     // previous/next links
     TABLE(CLASS:"changeSetNav") {
@@ -13,12 +17,12 @@ l.layout(title:my.key) {
                 TD(CLASS:"prev") {
                     if(prevs.hasNext()) {
                         l.img("24x24/previous.gif")
-                        l.rev(prevs.next())
+                        siblingLink(prevs.next())
                     }
                 }
                 TD(CLASS:"next") {
                     if(nexts.hasNext()) {
-                        l.rev(nexts.next())
+                        siblingLink(nexts.next())
                         l.img("24x24/next.gif")
                     }
                 }

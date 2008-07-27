@@ -2,6 +2,7 @@ package torricelli;
 
 import groovy.util.Node;
 import org.kohsuke.scotland.xstream.XmlFile;
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.QueryParameter;
@@ -59,6 +60,10 @@ public class Repository {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getUrl() {
+        return Stapler.getCurrentRequest().findAncestor(this).getUrl();
     }
 
     public XmlFile getXmlFile() {
