@@ -1,3 +1,5 @@
+import torricelli.L;
+
 taglib(L).layout {
     H2 {
         IMG(SRC:"img/error.gif")

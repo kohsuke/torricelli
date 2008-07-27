@@ -1,3 +1,4 @@
+import torricelli.L;
 import org.kohsuke.scotland.dir.DirectoryTags;
 
 L l = taglib(L)

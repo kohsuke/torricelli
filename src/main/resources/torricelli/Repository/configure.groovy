@@ -1,5 +1,7 @@
 import org.kohsuke.scotland.core.FormTags
 import torricelli.ChangeDirection;
+import torricelli.L;
+
 L l = taglib(L)
 FormTags f = taglib(org.kohsuke.scotland.core.FormTags)
 

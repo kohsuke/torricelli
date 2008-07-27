@@ -1,3 +1,4 @@
+import torricelli.L;
 import org.kohsuke.stapler.framework.io.LargeText
 
 lt = jelly(LargeText);
