@@ -49,13 +49,15 @@ public class Torricelli extends AbstractModelObject implements StaplerProxy {
      *
      * <p>
      * This allows external systems to identify this server.
+     *
+     * @see #serverIdString
      */
     public final UUID serverId = UUID.randomUUID();
 
     /**
      * The cached value of {@code serverId.toString()}
      */
-    private final String serverIdString;
+    public final String serverIdString;
 
     public Torricelli(File home, ServletContext context) throws IOException {
         INSTANCE = this;
