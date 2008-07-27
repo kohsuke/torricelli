@@ -2,6 +2,8 @@ package torricelli;
 
 import org.kohsuke.scotland.xstream.XmlFile;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
@@ -27,7 +30,7 @@ import java.text.ParseException;
  *
  * @author Kohsuke Kawaguchi
  */
-public class Torricelli extends AbstractModelObject {
+public class Torricelli extends AbstractModelObject implements StaplerProxy {
     public transient final File home;
     public transient final ServletContext context;
     public transient final AdjunctManager adjuncts;
@@ -41,6 +44,19 @@ public class Torricelli extends AbstractModelObject {
 
     private transient volatile HgServeRunner runner;
 
+    /**
+     * Unique identifier of this server.
+     *
+     * <p>
+     * This allows external systems to identify this server.
+     */
+    public final UUID serverId = UUID.randomUUID();
+
+    /**
+     * The cached value of {@code serverId.toString()}
+     */
+    private final String serverIdString;
+
     public Torricelli(File home, ServletContext context) throws IOException {
         INSTANCE = this;
 
@@ -52,6 +68,8 @@ public class Torricelli extends AbstractModelObject {
         XmlFile xml = getXmlFile();
         if(xml.exists())
             xml.unmarshal(this);
+
+        this.serverIdString = serverId.toString();
     }
 
     private XmlFile getXmlFile() {
@@ -176,5 +194,13 @@ public class Torricelli extends AbstractModelObject {
      */
     public static Date parseDate(String s) throws ParseException {
         return HTTP_DATE_FORMAT.get().parse(s);
+    }
+
+    /**
+     * This hook is to attach server ID to all the HTTP responses.
+     */
+    public Object getTarget() {
+        Stapler.getCurrentResponse().addHeader("X-Torricelli-Id",serverIdString);
+        return this;
     }
 }
