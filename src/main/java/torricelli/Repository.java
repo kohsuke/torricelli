@@ -113,7 +113,16 @@ public class Repository {
         } else {
             // the default action is to forward to "hg serve"
             getRunner().proxy(req, rsp);
+
+            if(req.getMethod().equals("POST"))
+                notifyChanges();
         }
+    }
+
+    /**
+     * Called after a change is submitted to the repository.
+     */
+    protected void notifyChanges() {
     }
 
     public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException {

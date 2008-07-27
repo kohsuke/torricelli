@@ -23,6 +23,8 @@ public class Repository2 extends Repository {
         if(qs!=null && qs.startsWith("cmd=")) {
             // Mercurial commands. Forward to the backend
             getRunner().proxy(req, rsp);
+            if(req.getMethod().equals("POST"))
+                notifyChanges();
         } else {
             TaskThread t = task;
             if(t!=null && t.isProminent()) {
