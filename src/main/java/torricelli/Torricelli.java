@@ -26,6 +26,8 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 
 import torricelli.listeners.HudsonNotifier;
+import torricelli.listeners.CommitListener;
+import net.sf.json.JSONObject;
 
 /**
  * The root object of the web application.
@@ -60,6 +62,11 @@ public class Torricelli extends AbstractModelObject implements StaplerProxy {
      * The cached value of {@code serverId.toString()}
      */
     public final String serverIdString;
+
+    /**
+     * Global {@link CommitListener}s. Copy-on-write semantics.
+     */
+    public volatile CommitListener[] listeners = new CommitListener[0];
 
     public Torricelli(File home, ServletContext context) throws IOException {
         INSTANCE = this;
@@ -154,6 +161,14 @@ public class Torricelli extends AbstractModelObject implements StaplerProxy {
         new Group(name).save();
         save();
         rsp.sendRedirect(name);
+    }
+
+    public void doSubmitConfig(StaplerRequest req, StaplerResponse rsp) throws IOException, InterruptedException, ServletException {
+        JSONObject json = req.getSubmittedForm();
+        List<CommitListener> l = req.bindJSONToList(CommitListener.class, json.get("listener"));
+        listeners = l.toArray(new CommitListener[l.size()]);
+        save();
+        rsp.sendRedirect2(".");
     }
 
     /**

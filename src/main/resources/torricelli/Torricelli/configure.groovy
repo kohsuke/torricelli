@@ -18,7 +18,7 @@ l.layout {
     f.structuredForm(ACTION:"submitConfig") {
         TABLE(STYLE:"width:100%") {
             f.block {
-                ft.heteroList("notifier",null,true,Descriptor.ALL.subList(CommitListener),null)
+                ft.heteroList("listener",null,true,Descriptor.ALL.subList(CommitListener),Arrays.asList(my.listeners))
             }
             f.block {
                 yui.submitButton("Submit")
