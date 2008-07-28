@@ -22,18 +22,20 @@ import java.util.logging.Logger;
  * @author Kohsuke Kawaguchi
  */
 public class HudsonNotifier extends CommitListener {
-
-    private final URL hudson;
+    /**
+     * Root URL of Hudson.
+     */
+    public final URL url;
 
     @DataBoundConstructor
-    public HudsonNotifier(URL hudson) {
-        this.hudson = hudson;
+    public HudsonNotifier(URL url) {
+        this.url = url;
     }
 
     public void onChanged(Repository r) {
         try {
             Ancestor a = Stapler.getCurrentRequest().findAncestor(r);
-            URL url = new URL(hudson, "plugin/mercurial/change?serverId=" +
+            URL url = new URL(this.url, "plugin/mercurial/change?serverId=" +
                     Torricelli.INSTANCE.serverIdString+"&url="+a.getUrl()+'/');
             HttpURLConnection con = (HttpURLConnection)url.openConnection();
             con.setDoOutput(true);
@@ -41,7 +43,7 @@ public class HudsonNotifier extends CommitListener {
             con.connect();
             con.getOutputStream().close();
             if(con.getResponseCode()!=200)
-            throw new IOException("Notification to "+hudson+" failed with "+con.getResponseCode()+" "+con.getResponseMessage());
+            throw new IOException("Notification to "+ this.url +" failed with "+con.getResponseCode()+" "+con.getResponseMessage());
         } catch (IOException e) {
             LOGGER.log(Level.INFO, e.getMessage(), e);
         }
