@@ -3,7 +3,7 @@
   <groupId>org.kohsuke</groupId>
   <artifactId>torricelli</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <packaging>war</packaging>
+  <packaging>stapler-war</packaging>
   <name>Mercurial Hosting WebApp</name>
   
   <build>
@@ -11,6 +11,11 @@
     <finalName>${project.artifactId}</finalName>
 
     <plugins>
+      <plugin>
+        <groupId>org.kohsuke.stapler</groupId>
+        <artifactId>maven-stapler-plugin</artifactId>
+        <extensions>true</extensions>
+      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
