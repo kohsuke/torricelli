@@ -15,7 +15,7 @@ DescriptorFormTags ft = taglib(DescriptorFormTags)
 l.layout {
     H2("Configuration")
 
-    FORM(ACTION:"submitConfig",METHOD:"post") {
+    f.structuredForm(ACTION:"submitConfig") {
         TABLE(STYLE:"width:100%") {
             f.block {
                 ft.heteroList("notifier",null,true,Descriptor.ALL.subList(CommitListener),null)
