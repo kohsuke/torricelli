@@ -69,7 +69,7 @@ l.layout {
             }
 
             H2("Delete a repository")
-            form("delete") {
+            form("deleteRepository") {
                 TR {
                     TD("Name")
                     TD(repoList)

@@ -195,6 +195,13 @@ public class Group extends AbstractModelObject {
     }
 
     /**
+     * Used to handle a request to delete a repository in this group.
+     */
+    public void doDeleteRepository(StaplerResponse rsp, @QueryParameter("src") String src) throws IOException, InterruptedException, ServletException {
+        rsp.sendRedirect(src+"/delete");
+    }
+
+    /**
      * Generates the repository dependency graph.
      */
     public void doGraph(StaplerResponse rsp) throws IOException, InterruptedException {
