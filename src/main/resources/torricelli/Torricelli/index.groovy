@@ -21,13 +21,15 @@ l.layout {
         }
     }
 
-    l.right {
-        DIV(CLASS:"box",STYLE:"width:auto;") {
-            H2("Create a new group")
-            form("create") {
-                TR {
-                    TD("Name")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
+    if(!app.readOnly) {
+        l.right {
+            DIV(CLASS:"box",STYLE:"width:auto;") {
+                H2("Create a new group")
+                form("create") {
+                    TR {
+                        TD("Name")
+                        TD { INPUT(TYPE:"text",NAME:"name") }
+                    }
                 }
             }
         }

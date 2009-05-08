@@ -225,4 +225,8 @@ public class Torricelli extends AbstractModelObject implements StaplerProxy {
         Stapler.getCurrentResponse().addHeader("X-Torricelli-Id",serverIdString);
         return this;
     }
+
+    public final boolean isReadOnly() {
+        return Boolean.getBoolean("torricelli.readOnly");
+    }
 }

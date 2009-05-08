@@ -29,50 +29,52 @@ l.layout {
         }
     }
 
-    l.right {
+    if(!app.readOnly) {
         l.right {
-            Def.navList(l);
-        }
-
-
-        DIV(CLASS:"box",STYLE:"width:auto;") {
-            H2("Create a new repository")
-            form("create") {
-                TR {
-                    TD("Name")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
+            l.right {
+                Def.navList(l);
             }
 
-            H2("Clone an existing repository")
-            form("clone") {
-                TR {
-                    TD("From")
-                    TD(repoList)
-                }
-                TR {
-                    TD("To")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
 
-            H2("Clone a remote repository")
-            form("remoteClone") {
-                TR {
-                    TD("From")
-                    TD { INPUT(TYPE:"text",NAME:"src") }
+            DIV(CLASS:"box",STYLE:"width:auto;") {
+                H2("Create a new repository")
+                form("create") {
+                    TR {
+                        TD("Name")
+                        TD { INPUT(TYPE:"text",NAME:"name") }
+                    }
                 }
-                TR {
-                    TD("To")
-                    TD { INPUT(TYPE:"text",NAME:"name") }
-                }
-            }
 
-            H2("Delete a repository")
-            form("deleteRepository") {
-                TR {
-                    TD("Name")
-                    TD(repoList)
+                H2("Clone an existing repository")
+                form("clone") {
+                    TR {
+                        TD("From")
+                        TD(repoList)
+                    }
+                    TR {
+                        TD("To")
+                        TD { INPUT(TYPE:"text",NAME:"name") }
+                    }
+                }
+
+                H2("Clone a remote repository")
+                form("remoteClone") {
+                    TR {
+                        TD("From")
+                        TD { INPUT(TYPE:"text",NAME:"src") }
+                    }
+                    TR {
+                        TD("To")
+                        TD { INPUT(TYPE:"text",NAME:"name") }
+                    }
+                }
+
+                H2("Delete a repository")
+                form("deleteRepository") {
+                    TR {
+                        TD("Name")
+                        TD(repoList)
+                    }
                 }
             }
         }
